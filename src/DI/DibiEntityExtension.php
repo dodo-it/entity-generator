@@ -14,7 +14,14 @@ class DibiEntityExtension extends CompilerExtension
 	/** @var mixed[] */
 	private $defaults = [
 		'path' => '%appDir%/Models/Entities',
-		'namespace' => 'App\\Models\Entities'
+		'namespace' => 'App\\Models\Entities',
+		'typeMapping' => [
+			'int' => ['int', 'bigint', 'mediumint', 'smallint' ],
+			'float' => ['decimal', 'float'],
+			'bool' => ['bit', 'tinyint'],
+			'\Dibi\DateTime' => ['date', 'datetime', 'timestamp'],
+			'\DateInterval' => ['time']
+		]
 	];
 
 	/**
@@ -32,7 +39,8 @@ class DibiEntityExtension extends CompilerExtension
 		$builder->addDefinition($this->prefix('Generator'))
 			->setFactory(Generator::class, [
 				'path' => $config['path'],
-				'namespace' => $config['namespace']
+				'namespace' => $config['namespace'],
+				'typeMapping' => $config['typeMapping']
 			]);
 
 		$builder->addDefinition($this->prefix('GenerateCommand'))

@@ -27,12 +27,18 @@ class Generator
 	 */
 	private $namespace;
 
+	/**
+	 * @var string[]
+	 */
+	private $typeMapping;
 
-	public function __construct(Repository $repository, string $path, string $namespace)
+
+	public function __construct(Repository $repository, string $path, string $namespace, array $typeMapping)
 	{
 		$this->repository = $repository;
 		$this->path = $path;
 		$this->namespace = $namespace;
+		$this->typeMapping = $typeMapping;
 	}
 
 
@@ -63,16 +69,7 @@ class Generator
 			if (isset($this->properties[$column->getField()])) {
 				continue;
 			}
-			$entity->addProperty($column->getField())->setVisibility('protected');
-
-			$getter = $entity->addMethod('get' . Inflector::ucwords($column->getField()));
-			$getter->setVisibility('public');
-			$getter->addBody('return $this->' . $column->getField() . ';');
-
-			$setter = $entity->addMethod('set' . Inflector::ucwords($column->getField()));
-			$setter->setVisibility('public');
-			$setter->addParameter('value');
-			$setter->addBody('$this->' . $column->getField() . ' = $value;');
+			$this->generateColumn($entity, $column);
 		}
 		file_put_contents($this->path . '/' . $shortclassName . '.php', $file->__toString());
 		echo $this->path . '/' . $shortclassName . '.php' . "\n";
@@ -93,5 +90,42 @@ class Generator
 			throw new \Exception('Bad naming for ' . $column->getField() . ' in table ' . $table .
 				', please change name in database or use AS in views');
 		}
+	}
+
+
+	protected function generateColumn(ClassType $entity, Column $column): void
+	{
+		$type = $this->getColumnType($column);
+		$entity->addProperty($column->getField())
+			->setVisibility('protected')
+			->addComment('@var ' . $type);
+
+		$getter = $entity->addMethod('get' . Inflector::classify($column->getField(), '_'));
+		$getter->setVisibility('public')
+			->addBody('return $this->' . $column->getField() . ';')
+			->setReturnType($type)
+			->setReturnNullable($column->isNullable());
+
+		$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
+		$setter->setVisibility('public');
+		$setter->addParameter('value')->setTypeHint($type);
+		$setter->addBody('$this->' . $column->getField() . ' = $value;');
+		$setter->addBody('return $this;');
+		$setter->setReturnType('self');
+
+	}
+
+
+	protected function getColumnType(Column $column): string
+	{
+		$dbColumnType = $column->getType();
+		if(Strings::contains($dbColumnType, '(')) {
+			$dbColumnType = Strings::lower(Strings::before($dbColumnType, '('));
+		}
+		$typeMapping = Helper::multiArrayFlip($this->typeMapping);
+		if(isset($typeMapping[$dbColumnType])) {
+			return $typeMapping[$dbColumnType];
+		}
+		return 'string';
 	}
 }

@@ -13,4 +13,15 @@ class Helper
 		'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try',
 		'unset', 'use', 'var', 'while', 'xor'];
 
+
+	public static function multiArrayFlip($array): array
+	{
+		$result = [];
+		foreach($array as $key => $insideArray) {
+			foreach($insideArray as $value) {
+				$result[$value] = $key;
+			}
+		}
+		return $result;
+	}
 }
