@@ -53,7 +53,7 @@ class Generator
 	public function generateEntity(string $table): void
 	{
 		$file = new PhpFile();
-		$file->addNamespace($this->namespace);
+		$namespace = $file->addNamespace($this->namespace);
 
 		$shortclassName = $this->getClassName($table);
 		$fqnClassName = $this->namespace . '\\' . $shortclassName;
@@ -61,7 +61,7 @@ class Generator
 		if(class_exists($fqnClassName)){
 			$entity = ClassType::from($shortclassName);
 		} else {
-			$entity = $file->addClass($shortclassName);
+			$entity = $namespace->addClass($shortclassName);
 		}
 		$columns = $this->repository->getTableColumns($table);
 		foreach($columns as $column) {
