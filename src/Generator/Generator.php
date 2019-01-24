@@ -56,23 +56,20 @@ class Generator
 		$namespace = $file->addNamespace($this->namespace);
 
 		$shortclassName = $this->getClassName($table);
-		$fqnClassName = $this->namespace . '\\' . $shortclassName;
-
-		if(class_exists($fqnClassName)){
-			$entity = ClassType::from($shortclassName);
-		} else {
-			$entity = $namespace->addClass($shortclassName);
+		$fqnClassName = '\\' . $this->namespace . '\\' . $shortclassName;
+		$entity = $namespace->addClass($shortclassName);
+		if(class_exists( $fqnClassName)){
+			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 		}
 		$columns = $this->repository->getTableColumns($table);
 		foreach($columns as $column) {
 			$this->validateColumnName($table, $column);
-			if (isset($this->properties[$column->getField()])) {
+			if (isset($entity->properties[$column->getField()])) {
 				continue;
 			}
 			$this->generateColumn($entity, $column);
 		}
 		file_put_contents($this->path . '/' . $shortclassName . '.php', $file->__toString());
-		echo $this->path . '/' . $shortclassName . '.php' . "\n";
 	}
 
 
@@ -127,5 +124,34 @@ class Generator
 			return $typeMapping[$dbColumnType];
 		}
 		return 'string';
+	}
+
+	private function cloneEntityFromExistingEntity(ClassType $entity, ClassType $from): void
+	{
+		$entity->setProperties($from->getProperties());
+
+		$entity->setMethods( $from->getMethods());
+
+		foreach($entity->methods as $method) {
+			$fqnClassName = '\\' . $this->namespace . '\\' . $entity->getName();
+			$body = $this->getMethodBody($fqnClassName, $method->getName());
+			$method->setBody($body);
+		}
+	}
+
+
+	private function getMethodBody(string $class, string $name): string
+	{
+		$func = new \ReflectionMethod($class, $name);
+		$startLine = $func->getStartLine() + 1;
+		$length = $func->getEndLine() - $startLine - 1;
+
+		$source = file($func->getFileName());
+		$bodyLines = array_slice($source, $startLine, $length);
+		$body = '';
+		foreach ($bodyLines as $bodyLine) {
+			$body .= Strings::after($bodyLine, "\t\t");
+		}
+		return $body;
 	}
 }
