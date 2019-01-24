@@ -136,7 +136,7 @@ class Generator
 
 		$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
 		$setter->setVisibility('public');
-		$setter->addParameter('value')->setTypeHint($type)->isNullable($column->isNullable());
+		$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
 		$setter->addBody('$this[\'' . $column->getField() . '\'] = $value;');
 		$setter->addBody('return $this;');
 		$setter->setReturnType('self');
