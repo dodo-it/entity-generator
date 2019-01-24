@@ -46,4 +46,6 @@ class DibiEntityExtension extends CompilerExtension
 		$builder->addDefinition($this->prefix('GenerateCommand'))
 			->setFactory(GenerateCommand::class);
 	}
+
+
 }
