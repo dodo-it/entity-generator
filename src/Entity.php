@@ -8,6 +8,8 @@ use Dibi\NotImplementedException;
 class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
 {
 
+	public const TABLE = NULL;
+
 	/**
 	 * @var $data
 	 */
@@ -34,23 +36,31 @@ class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
 	}
 
 
+	public function tableName(): ?string
+	{
+		return self::TABLE;
+	}
+
+
 	public function count()
 	{
 		return count((array) $this->data);
 	}
+
 
 	public function toArray()
 	{
 		return $this->data;
 	}
 
-	final public function getIterator()
+
+	public function getIterator()
 	{
 		return new \ArrayIterator($this->data);
 	}
 
 
-	final public function offsetSet($nm, $val)
+	public function offsetSet($nm, $val)
 	{
 		$this->data[$nm] = $val;
 		$this->modifications[$nm] = $val;
@@ -58,19 +68,19 @@ class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
 	}
 
 
-	final public function offsetGet($nm)
+	public function offsetGet($nm)
 	{
 		throw new NotImplementedException('You should never access entity as array');
 	}
 
 
-	final public function offsetExists($nm)
+	public function offsetExists($nm)
 	{
 		throw new NotImplementedException('You should never access entity as array');
 	}
 
 
-	final public function offsetUnset($nm)
+	public function offsetUnset($nm)
 	{
 		throw new NotImplementedException('You should never access entity as array');
 	}
