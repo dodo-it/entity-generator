@@ -2,8 +2,8 @@
 
 namespace DodoIt\DibiEntity;
 
-
 use Dibi\NotImplementedException;
+
 
 class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
 {
@@ -38,7 +38,7 @@ class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
 
 	public function tableName(): ?string
 	{
-		return self::TABLE;
+		return static::TABLE;
 	}
 
 
