@@ -22,6 +22,9 @@ class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
 	public function __construct(array $arr = [])
 	{
 		$this->data = $arr;
+		foreach ($arr as $k => $v) {
+			$this->$k = $v;
+		}
 	}
 
 
