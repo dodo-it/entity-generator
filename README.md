@@ -38,8 +38,17 @@ dibiEntity:
 
 sample usage:
 
+select:
 
     $this->db->select('*')->from('users')->where('id = %i', $id)
 				->execute()
 				->setRowClass(User::class)
 				->fetch();
+update/insert:
+
+	$user = new User();
+	$user->setUsername('user1');
+	$user->setColumn2(NULL);
+	$user->setColumn3(5);
+	$this->db->update('users', $user->_getModifications())->where('id = %i', 22);
+	// UPDATE users SET ´username´ = 'user1', column_2 = 5, column_3 = NULL WHERE id = 22
