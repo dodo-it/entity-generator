@@ -3,6 +3,7 @@
 namespace DodoIt\DibiEntity\Generator;
 
 use Doctrine\Common\Inflector\Inflector;
+use DodoIt\DibiEntity\Entity;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\SmartObject;
@@ -61,6 +62,7 @@ class Generator
 		if(class_exists( $fqnClassName)){
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 		}
+		$entity->setExtends(Entity::class);
 		$columns = $this->repository->getTableColumns($table);
 		foreach($columns as $column) {
 			$this->validateColumnName($table, $column);
