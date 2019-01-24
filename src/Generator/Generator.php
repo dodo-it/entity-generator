@@ -32,19 +32,37 @@ class Generator
 	 * @var string[]
 	 */
 	private $typeMapping;
+
 	/**
 	 * @var array
 	 */
 	private $replacements;
 
+	/**
+	 * @var string
+	 */
+	private $prefix;
 
-	public function __construct(Repository $repository, string $path, string $namespace, array $typeMapping, array $replacements)
+	/**
+	 * @var string
+	 */
+	private $suffix;
+
+	/**
+	 * @var string
+	 */
+	private $extends;
+
+	public function __construct(Repository $repository, array $config)
 	{
 		$this->repository = $repository;
-		$this->path = $path;
-		$this->namespace = $namespace;
-		$this->typeMapping = $typeMapping;
-		$this->replacements = $replacements;
+		$this->path = $config['path'];
+		$this->namespace = $config['namespace'];
+		$this->typeMapping = $config['typeMapping'];
+		$this->replacements = $config['replacements'];
+		$this->prefix = $config['prefix'];
+		$this->suffix = $config['suffix'];
+		$this->extends = $config['extends'];
 	}
 
 
@@ -64,10 +82,13 @@ class Generator
 		$shortclassName = $this->getClassName($table);
 		$fqnClassName = '\\' . $this->namespace . '\\' . $shortclassName;
 		$entity = $namespace->addClass($shortclassName);
+
+		$entity->addConstant('TABLE', $table)->setVisibility('public');
+
 		if(class_exists( $fqnClassName)){
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 		}
-		$entity->setExtends(Entity::class);
+		$entity->setExtends($this->extends);
 		$columns = $this->repository->getTableColumns($table);
 		foreach($columns as $column) {
 			$this->validateColumnName($table, $column);
@@ -85,7 +106,7 @@ class Generator
 		if(isset($this->replacements[$table])) {
 			return $this->replacements[$table];
 		}
-		return Inflector::singularize(Inflector::classify($table));
+		return $this->prefix . Inflector::singularize(Inflector::classify($table)) . $this->suffix;
 	}
 
 	/**

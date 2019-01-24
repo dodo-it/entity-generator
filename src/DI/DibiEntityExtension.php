@@ -3,6 +3,7 @@
 namespace DodoIt\DibiEntity\DI;
 
 use DodoIt\DibiEntity\Command\GenerateCommand;
+use DodoIt\DibiEntity\Entity;
 use DodoIt\DibiEntity\Generator\Generator;
 use DodoIt\DibiEntity\Generator\Repository;
 use Nette\DI\CompilerExtension;
@@ -22,7 +23,10 @@ class DibiEntityExtension extends CompilerExtension
 			'\Dibi\DateTime' => ['date', 'datetime', 'timestamp'],
 			'\DateInterval' => ['time']
 		],
-		'replacements' => []
+		'replacements' => [],
+		'prefix' => '',
+		'suffix' => 'Entity',
+		'extends' => Entity::class
 	];
 
 	/**
@@ -38,16 +42,9 @@ class DibiEntityExtension extends CompilerExtension
 			->setFactory(Repository::class);
 
 		$builder->addDefinition($this->prefix('Generator'))
-			->setFactory(Generator::class, [
-				'path' => $config['path'],
-				'namespace' => $config['namespace'],
-				'typeMapping' => $config['typeMapping'],
-				'replacements' => $config['replacements']
-			]);
+			->setFactory(Generator::class, ['config' => $config]);
 
 		$builder->addDefinition($this->prefix('GenerateCommand'))
 			->setFactory(GenerateCommand::class);
 	}
-
-
 }

@@ -33,7 +33,11 @@ dibiEntity:
             - timestamp
         '\DateInterval':
             - time
-
+    replacements:
+      #table: entityName
+    prefix: ''
+    sufix: 'Entity'
+    extends: '\DodoIt\DibiEntity\Entity'
 ```
 
 sample usage:
@@ -52,3 +56,5 @@ update/insert:
 	$user->setColumn3(5);
 	$this->db->update('users', $user->_getModifications())->where('id = %i', 22);
 	// UPDATE users SET ´username´ = 'user1', column_2 = 5, column_3 = NULL WHERE id = 22
+
+You can also add your own methods to entities and change getter/setter functions, they won't be overriden when regenerated
