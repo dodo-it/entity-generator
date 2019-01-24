@@ -21,7 +21,8 @@ class DibiEntityExtension extends CompilerExtension
 			'bool' => ['bit', 'tinyint'],
 			'\Dibi\DateTime' => ['date', 'datetime', 'timestamp'],
 			'\DateInterval' => ['time']
-		]
+		],
+		'replacements' => []
 	];
 
 	/**
@@ -40,7 +41,8 @@ class DibiEntityExtension extends CompilerExtension
 			->setFactory(Generator::class, [
 				'path' => $config['path'],
 				'namespace' => $config['namespace'],
-				'typeMapping' => $config['typeMapping']
+				'typeMapping' => $config['typeMapping'],
+				'replacements' => $config['replacements']
 			]);
 
 		$builder->addDefinition($this->prefix('GenerateCommand'))

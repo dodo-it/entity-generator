@@ -32,14 +32,19 @@ class Generator
 	 * @var string[]
 	 */
 	private $typeMapping;
+	/**
+	 * @var array
+	 */
+	private $replacements;
 
 
-	public function __construct(Repository $repository, string $path, string $namespace, array $typeMapping)
+	public function __construct(Repository $repository, string $path, string $namespace, array $typeMapping, array $replacements)
 	{
 		$this->repository = $repository;
 		$this->path = $path;
 		$this->namespace = $namespace;
 		$this->typeMapping = $typeMapping;
+		$this->replacements = $replacements;
 	}
 
 
@@ -77,6 +82,9 @@ class Generator
 
 	protected function getClassName(string $table): string
 	{
+		if(isset($this->replacements[$table])) {
+			return $this->replacements[$table];
+		}
 		return Inflector::singularize(Inflector::classify($table));
 	}
 
