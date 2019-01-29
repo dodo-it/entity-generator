@@ -3,6 +3,8 @@
 namespace DodoIt\DibiEntity\Generator;
 
 use Dibi\Connection;
+use Dibi\Result;
+
 
 class Repository
 {
@@ -11,6 +13,7 @@ class Repository
 	 * @var Connection
 	 */
 	private $db;
+
 
 	public function __construct(Connection $db)
 	{
@@ -28,12 +31,22 @@ class Repository
 
 
 	/**
-	 * @param string $table
-	 * @return Column[]
 	 * @throws \Dibi\Exception
 	 */
 	public function getTableColumns(string $table): array
 	{
 		return $this->db->query('SHOW COLUMNS FROM %n', $table)->setRowClass(Column::class)->fetchAll();
+	}
+
+
+	public function createViewFromQuery(string $name, string $query): Result
+	{
+		return $this->db->query('CREATE VIEW %n AS ' . $query, $name);
+	}
+
+
+	public function dropView(string $name): Result
+	{
+		return $this->db->query('DROP VIEW %n', $name);
 	}
 }

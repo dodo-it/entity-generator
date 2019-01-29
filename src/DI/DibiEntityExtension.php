@@ -26,7 +26,9 @@ class DibiEntityExtension extends CompilerExtension
 		'replacements' => [],
 		'prefix' => '',
 		'suffix' => 'Entity',
-		'extends' => Entity::class
+		'extends' => Entity::class,
+		'gettersAndSetters' => false,
+		'propertyVisibility' => 'protected'
 	];
 
 	/**

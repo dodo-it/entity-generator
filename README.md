@@ -1,8 +1,12 @@
+##About
+Typed ntity generator from database. It can generate entities for whole database, table/view and from query
 
 ## Installation
 
     $ composer require dodo-it/dibi-entity
 
+
+## For Nette users:
  register extension in your `config.neon`:
 
 ```yaml
@@ -38,10 +42,24 @@ dibiEntity:
     prefix: ''
     sufix: 'Entity'
     extends: '\DodoIt\DibiEntity\Entity'
+    gettersAndSetters: true
+    propertyVisibility: protected
 ```
+#USAGE:
+run php bin/console entity
 
-sample usage:
 
+sample usage for generated entities with dibi:
+
+    //generates all entities from tables and views in database 
+    console entity:generate
+    
+    //generate entity for table users
+    console entity:generate users
+    
+    //generate entity  UserWithAddress from query
+    console entity:generate UserWithAddress --query="SELECT u.*, a.street FROM users u LEFT JOIN addresses a ON a.user_id = u.id"
+ 
 select:
 
     $this->db->select('*')->from('users')->where('id = %i', $id)

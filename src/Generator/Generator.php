@@ -3,7 +3,6 @@
 namespace DodoIt\DibiEntity\Generator;
 
 use Doctrine\Common\Inflector\Inflector;
-use DodoIt\DibiEntity\Entity;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\SmartObject;
@@ -53,6 +52,16 @@ class Generator
 	 */
 	private $extends;
 
+	/**
+	 * @var bool
+	 */
+	private $gettersAndSetters;
+
+	/**
+	 * @var string
+	 */
+	private $propertyVisibility;
+
 	public function __construct(Repository $repository, array $config)
 	{
 		$this->repository = $repository;
@@ -63,16 +72,32 @@ class Generator
 		$this->prefix = $config['prefix'];
 		$this->suffix = $config['suffix'];
 		$this->extends = $config['extends'];
+		$this->gettersAndSetters = $config['gettersAndSetters'];
+		$this->propertyVisibility = $config['propertyVisibility'];
 	}
 
 
-	public function generate()
+	public function generate(?string $table = NULL, ?string $query)
 	{
-		$tables = $this->repository->getTables();
-		foreach ($tables as $table) {
+		if(!empty($query)) {
+			if(empty($table)) {
+				throw new \Exception('When using query table argument has to be provided!');
+			}
+			$this->repository->createViewFromQuery($table, $query);
 			$this->generateEntity($table);
+			$this->repository->dropView($table, $query);
+			return;
+		}
+		if($table !== NULL) {
+			$this->generateEntity($table);
+			return;
+		}
+		$tables = $this->repository->getTables();
+		foreach ($tables as $oneTable) {
+			$this->generateEntity($oneTable);
 		}
 	}
+
 
 	public function generateEntity(string $table): void
 	{
@@ -125,9 +150,13 @@ class Generator
 	{
 		$type = $this->getColumnType($column);
 		$entity->addProperty($column->getField())
-			->setVisibility('protected')
-			->addComment('@var ' . $type);
-
+			->setVisibility($this->propertyVisibility)
+			->addComment('')
+			->addComment('@var ' . $type)
+			->addComment('');
+		if(!$this->gettersAndSetters) {
+			return;
+		}
 		$getter = $entity->addMethod('get' . Inflector::classify($column->getField(), '_'));
 		$getter->setVisibility('public')
 			->addBody('return $this->' . $column->getField() . ';')
