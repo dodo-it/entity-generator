@@ -1,5 +1,5 @@
-##About
-Typed ntity generator from database. It can generate entities for whole database, table/view and from query
+## About
+Typed entity generator from database. It can generate entities for whole database, table/view and from query
 
 ## Installation
 
