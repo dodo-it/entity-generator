@@ -30,13 +30,18 @@ class GenerateCommand extends Command
 			->setDescription('Generate entities from database');
 		$this->addArgument('table', InputArgument::OPTIONAL);
 		$this->addOption('query', NULL, InputOption::VALUE_OPTIONAL, 'Provide SQL query from which I can generate entity (WARNING: This will create view with name of table argument and DROP it afterwards)');
+		$this->addOption('query-file', NULL, InputOption::VALUE_OPTIONAL, 'Provide file path that holds SQL query from which to generate entity (works in similar way as query but it loads query from file)');
 
 	}
 
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		$this->generator->generate($input->getArgument('table'), $input->getOption('query'));
+		$query = $input->getOption('query');
+		if($input->getOption('query-file')) {
+			$query = file_get_contents($input->getOption('query-file'));
+		}
+		$this->generator->generate($input->getArgument('table'), $query);
 		return 0;
 	}
 }
