@@ -45,7 +45,7 @@ dibiEntity:
     gettersAndSetters: true
     propertyVisibility: protected
 ```
-#USAGE:
+## USAGE:
 run php bin/console entity
 
 
