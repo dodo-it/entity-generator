@@ -2,20 +2,17 @@
 
 namespace DodoIt\EntityGenerator\Generator;
 
-use Dibi\Connection;
-use Dibi\Result;
-
 
 class Repository
 {
 
 	/**
-	 * @var Connection
+	 * @var \PDO
 	 */
 	private $db;
 
 
-	public function __construct(Connection $db)
+	public function __construct(\PDO $db)
 	{
 		$this->db = $db;
 	}
@@ -26,27 +23,25 @@ class Repository
 	 */
 	public function getTables(): array
 	{
-		return $this->db->fetchPairs('SHOW TABLES');
+		return $this->db->query('SHOW TABLES')->fetchAll(\PDO::FETCH_COLUMN, 0);
 	}
 
-
-	/**
-	 * @throws \Dibi\Exception
-	 */
 	public function getTableColumns(string $table): array
 	{
-		return $this->db->query('SHOW COLUMNS FROM %n', $table)->setRowClass(Column::class)->fetchAll();
+		$query = $this->db->query('SHOW COLUMNS FROM `' . $table . '`');
+		$query->setFetchMode(\PDO::FETCH_CLASS, Column::class);
+		return $query->fetchAll();
 	}
 
 
-	public function createViewFromQuery(string $name, string $query): Result
+	public function createViewFromQuery(string $name, string $query): void
 	{
-		return $this->db->query('CREATE VIEW %n AS ' . $query, $name);
+		$this->db->query('CREATE VIEW `' . $name . '` AS ' . $query)->execute();
 	}
 
 
-	public function dropView(string $name): Result
+	public function dropView(string $name): void
 	{
-		return $this->db->query('DROP VIEW %n', $name);
+		$this->db->query('DROP VIEW `' . $name . '`')->execute();
 	}
 }

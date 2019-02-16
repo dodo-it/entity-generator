@@ -77,7 +77,7 @@ class Generator
 	}
 
 
-	public function generate(?string $table = NULL, ?string $query)
+	public function generate(?string $table = NULL, ?string $query = NULL)
 	{
 		if(!empty($query)) {
 			if(empty($table)) {
@@ -104,9 +104,9 @@ class Generator
 		$file = new PhpFile();
 		$namespace = $file->addNamespace($this->namespace);
 
-		$shortclassName = $this->getClassName($table);
-		$fqnClassName = '\\' . $this->namespace . '\\' . $shortclassName;
-		$entity = $namespace->addClass($shortclassName);
+		$shortClassName = $this->getClassName($table);
+		$fqnClassName = '\\' . $this->namespace . '\\' . $shortClassName;
+		$entity = $namespace->addClass($shortClassName);
 
 		$entity->addConstant('TABLE', $table)->setVisibility('public');
 
@@ -122,7 +122,7 @@ class Generator
 			}
 			$this->generateColumn($entity, $column);
 		}
-		file_put_contents($this->path . '/' . $shortclassName . '.php', $file->__toString());
+		file_put_contents($this->path . '/' . $shortClassName . '.php', $file->__toString());
 	}
 
 

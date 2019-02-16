@@ -50,7 +50,7 @@ entityGenerator:
 run php bin/console entity
 
 
-sample usage for generated entities with dibi:
+sample usage for generated entities:
 
     //generates all entities from tables and views in database 
     console entity:generate

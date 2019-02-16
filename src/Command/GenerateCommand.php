@@ -26,7 +26,7 @@ class GenerateCommand extends Command
 
 	protected function configure()
 	{
-		$this->setName('entity:generate')
+		$this->setName('entity-generator:generate')
 			->setDescription('Generate entities from database');
 		$this->addArgument('table', InputArgument::OPTIONAL);
 		$this->addOption('query', NULL, InputOption::VALUE_OPTIONAL, 'Provide SQL query from which I can generate entity (WARNING: This will create view with name of table argument and DROP it afterwards)');

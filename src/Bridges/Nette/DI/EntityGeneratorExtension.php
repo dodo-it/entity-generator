@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace DodoIt\EntityGenerator\DI;
+namespace DodoIt\EntityGenerator\Bridges\Nette\DI;
 
 use DodoIt\EntityGenerator\Command\GenerateCommand;
 use DodoIt\EntityGenerator\Entity;
@@ -20,7 +20,7 @@ class EntityGeneratorExtension extends CompilerExtension
 			'int' => ['int', 'bigint', 'mediumint', 'smallint' ],
 			'float' => ['decimal', 'float'],
 			'bool' => ['bit', 'tinyint'],
-			'\Dibi\DateTime' => ['date', 'datetime', 'timestamp'],
+			'\DateTime' => ['date', 'datetime', 'timestamp'],
 			'\DateInterval' => ['time']
 		],
 		'replacements' => [],
