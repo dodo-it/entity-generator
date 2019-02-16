@@ -2,7 +2,7 @@
   "name": "dodo-it/dibi-entity",
   "type": "library",
   "description": "Entity generator for dibi",
-  "keywords": ["entity", "dibi", "nette", "generator"],
+  "keywords": ["entity", "database", "table", "generator", "nette"],
   "license": ["MIT"],
   "authors": [
     {
@@ -11,12 +11,12 @@
   ],
   "autoload": {
     "psr-4": {
-      "DodoIt\\DibiEntity\\": "src/"
+      "DodoIt\\EntityGenerator\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "DodoIt\\DibiEntity\\Tests\\": "tests"
+      "DodoIt\\EntityGenerator\\Tests\\": "tests"
     }
   },
   "require": {
@@ -29,6 +29,6 @@
     "doctrine/inflector": "^1.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.5"
+    "phpunit/phpunit": "^8.0"
   }
 }

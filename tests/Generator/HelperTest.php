@@ -1,6 +1,6 @@
 <?php declare (strict_types=1);
 
-namespace DodoIt\DibiEntity\Tests;
+namespace DodoIt\EntityGenerator\Tests;
 
 use PHPUnit\Framework\TestCase;
 
@@ -13,7 +13,7 @@ class HelperTest extends TestCase
 			'int' => ['int', 'bigint'],
 			'\DateInterval' => ['time']
 		];
-		$result = \DodoIt\DibiEntity\Generator\Helper::multiArrayFlip($arr);
+		$result = \DodoIt\EntityGenerator\Generator\Helper::multiArrayFlip($arr);
 		$this->assertEquals($result, [
 			'int' => 'int',
 			'bigint' => 'int',

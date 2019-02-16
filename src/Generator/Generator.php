@@ -1,6 +1,6 @@
 <?php declare (strict_types=1);
 
-namespace DodoIt\DibiEntity\Generator;
+namespace DodoIt\EntityGenerator\Generator;
 
 use Doctrine\Common\Inflector\Inflector;
 use Nette\PhpGenerator\ClassType;

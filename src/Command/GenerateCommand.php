@@ -1,8 +1,8 @@
 <?php declare (strict_types=1);
 
-namespace DodoIt\DibiEntity\Command;
+namespace DodoIt\EntityGenerator\Command;
 
-use DodoIt\DibiEntity\Generator\Generator;
+use DodoIt\EntityGenerator\Generator\Generator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

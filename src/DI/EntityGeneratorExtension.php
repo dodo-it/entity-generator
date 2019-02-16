@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace DodoIt\DibiEntity\DI;
+namespace DodoIt\EntityGenerator\DI;
 
-use DodoIt\DibiEntity\Command\GenerateCommand;
-use DodoIt\DibiEntity\Entity;
-use DodoIt\DibiEntity\Generator\Generator;
-use DodoIt\DibiEntity\Generator\Repository;
+use DodoIt\EntityGenerator\Command\GenerateCommand;
+use DodoIt\EntityGenerator\Entity;
+use DodoIt\EntityGenerator\Generator\Generator;
+use DodoIt\EntityGenerator\Generator\Repository;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Helpers;
 
 
-class DibiEntityExtension extends CompilerExtension
+class EntityGeneratorExtension extends CompilerExtension
 {
 	/** @var mixed[] */
 	private $defaults = [

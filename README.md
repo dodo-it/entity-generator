@@ -3,7 +3,8 @@ Typed entity generator from database. It can generate entities for whole databas
 
 ## Installation
 
-    $ composer require dodo-it/dibi-entity
+    $ composer require dodo-it/entity-generator
+
 
 
 ## For Nette users:
@@ -11,12 +12,12 @@ Typed entity generator from database. It can generate entities for whole databas
 
 ```yaml
 extensions:
-    dibiEntity: DodoIt\DibiEntity\DI\DibiEntityExtension
+    entityGenerator: DodoIt\EntityGenerator\DI\EntityGeneratorExtension
 ```
 
 configuration, these are defaults, so you need to provide it only if this doesn't suit you:
 ```yaml
-dibiEntity:
+entityGenerator:
     path: %appDir%/Models/Entities
     namespace: App\Models\Entities
     typeMapping:
@@ -31,7 +32,7 @@ dibiEntity:
         bool:
             - bit
             - tinyint
-        '\Dibi\DateTime':
+        '\DateTime':
             - date
             - datetime
             - timestamp
@@ -41,7 +42,7 @@ dibiEntity:
       #table: entityName
     prefix: ''
     sufix: 'Entity'
-    extends: '\DodoIt\DibiEntity\Entity'
+    extends: '\DodoIt\EntityGenerator\Entity'
     gettersAndSetters: true
     propertyVisibility: protected
 ```
