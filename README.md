@@ -5,75 +5,164 @@ Typed entity generator from database. It can generate entities for whole databas
 
     $ composer require dodo-it/entity-generator
 
-
-
-## For Nette users:
- register extension in your `config.neon`:
-
-```yaml
-extensions:
-    entityGenerator: DodoIt\EntityGenerator\DI\EntityGeneratorExtension
-```
-
-configuration, these are defaults, so you need to provide it only if this doesn't suit you:
-```yaml
-entityGenerator:
-    path: %appDir%/Models/Entities
-    namespace: App\Models\Entities
-    typeMapping:
-        int:
-            - int
-            - bigint
-            - mediumint
-            - smallint
-        float:
-            - decimal
-            - float
-        bool:
-            - bit
-            - tinyint
-        '\DateTime':
-            - date
-            - datetime
-            - timestamp
-        '\DateInterval':
-            - time
-    replacements:
-      #table: entityName
-    prefix: ''
-    sufix: 'Entity'
-    extends: '\DodoIt\EntityGenerator\Entity'
-    gettersAndSetters: true
-    propertyVisibility: protected
-```
 ## USAGE:
-run php bin/console entity
+        $config = [
+            'path' => __DIR__ . '/Entities',
+            'extends' => \Examples\Pdo\Entities\Entity::class,
+            'namespace' => 'Examples\Pdo\Entities'
+        ];
 
 
-sample usage for generated entities:
+        $pdo = new \PDO('mysql:dbname=example;host=127.0.0.1', 'root', '');
 
-    //generates all entities from tables and views in database 
-    console entity:generate
-    
-    //generate entity for table users
-    console entity:generate users
-    
-    //generate entity  UserWithAddress from query
-    console entity:generate UserWithAddress --query="SELECT u.*, a.street FROM users u LEFT JOIN addresses a ON a.user_id = u.id"
- 
-select:
+        $generatorFactory = new \DodoIt\EntityGenerator\GeneratorFactory($pdo);
+        $generator = $generatorFactory->create($config);
+        $generator->generate();
 
-    $this->db->select('*')->from('users')->where('id = %i', $id)
-				->execute()
-				->setRowClass(User::class)
-				->fetch();
-update/insert:
 
-	$user = new User();
-	$user->setUsername('user1');
-	$user->setColumn2(NULL);
-	$user->setColumn3(5);
-	$this->db->update('users', $user->_getModifications())->where('id = %i', 22);
-	// UPDATE users SET ´username´ = 'user1', column_2 = 5, column_3 = NULL WHERE id = 22
 
-You can also add your own methods to entities and change getter/setter functions, they won't be overriden when regenerated
+see example folder
+
+
+You can add your own methods to entities and change getter/setter functions, they won't be overriden when regenerated
+
+
+## Configuration
+this are defaults
+
+    $config = [
+            'path' => NULL
+            'namespace' => 'App\\Models\Entities',
+            'typeMapping' => [
+                'int' => ['int', 'bigint', 'mediumint', 'smallint' ],
+                'float' => ['decimal', 'float'],
+                'bool' => ['bit', 'tinyint'],
+                '\DateTime' => ['date', 'datetime', 'timestamp'],
+                '\DateInterval' => ['time']
+            ],
+            'replacements' => [],
+            'prefix' => '',
+            'suffix' => 'Entity',
+            'extends' => \Examples\Pdo\Entity::class,
+            'gettersAndSetters' => true,
+            'propertyVisibility' => 'protected'
+        ];
+        
+        
+# Example of generated entity:
+
+    <?php
+    namespace Examples\Pdo\Entities;
+
+    class ArticleEntity extends Entity
+    {
+        public const TABLE = 'articles';
+
+        /**
+         * @var int
+         */
+        protected $id;
+
+        /**
+         * @var int
+         */
+        protected $category_id;
+
+        /**
+         * @var string
+         */
+        protected $title;
+
+        /**
+         * @var string
+         */
+        protected $content;
+
+        /**
+         * @var bool
+         */
+        protected $published;
+
+        /**
+         * @var \DateTime
+         */
+        protected $created_at;
+
+
+        public function getId(): int
+        {
+            return $this->id;
+        }
+
+
+        public function setId(int $value): self
+        {
+            $this['id'] = $value;
+            return $this;
+        }
+
+
+        public function getCategoryId(): int
+        {
+            return $this->category_id;
+        }
+
+
+        public function setCategoryId(int $value): self
+        {
+            $this['category_id'] = $value;
+            return $this;
+        }
+
+
+        public function getTitle(): ?string
+        {
+            return $this->title;
+        }
+
+
+        public function setTitle(?string $value): self
+        {
+            $this['title'] = $value;
+            return $this;
+        }
+
+
+        public function getContent(): ?string
+        {
+            return $this->content;
+        }
+
+
+        public function setContent(?string $value): self
+        {
+            $this['content'] = $value;
+            return $this;
+        }
+
+
+        public function getPublished(): bool
+        {
+            return $this->published;
+        }
+
+
+        public function setPublished(bool $value): self
+        {
+            $this['published'] = $value;
+            return $this;
+        }
+
+
+        public function getCreatedAt(): ?\DateTime
+        {
+            return $this->created_at;
+        }
+
+
+        public function setCreatedAt(?\DateTime $value): self
+        {
+            $this['created_at'] = $value;
+            return $this;
+        }
+    }
