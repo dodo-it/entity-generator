@@ -1,8 +1,6 @@
 <?php declare (strict_types=1);
 
-namespace DodoIt\DibiEntity;
-
-use Dibi\NotImplementedException;
+namespace DodoIt\EntityGenerator;
 
 
 class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
@@ -70,18 +68,18 @@ class Entity implements \ArrayAccess, \IteratorAggregate, \Countable
 
 	public function offsetGet($nm)
 	{
-		throw new NotImplementedException('You should never access entity as array');
+		throw new \Exception('You should never access entity as array');
 	}
 
 
 	public function offsetExists($nm)
 	{
-		throw new NotImplementedException('You should never access entity as array');
+		throw new \Exception('You should never access entity as array');
 	}
 
 
 	public function offsetUnset($nm)
 	{
-		throw new NotImplementedException('You should never access entity as array');
+		throw new \Exception('You should never access entity as array');
 	}
 }

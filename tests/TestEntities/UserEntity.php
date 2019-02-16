@@ -1,7 +1,7 @@
 <?php
-namespace DodoIt\DibiEntity\Tests\TestEntities;
+namespace DodoIt\EntityGenerator\Tests\TestEntities;
 
-use DodoIt\DibiEntity\Entity;
+use DodoIt\EntityGenerator\Entity;
 
 class UserEntity extends Entity
 {
@@ -44,13 +44,13 @@ class UserEntity extends Entity
 	}
 
 
-	public function getLastLogin(): ?\Dibi\DateTime
+	public function getLastLogin(): ?\DateTime
 	{
 		return $this->last_login;
 	}
 
 
-	public function setLastLogin(\Dibi\DateTime $value): self
+	public function setLastLogin(\DateTime $value): self
 	{
 		$this['last_login'] = $value;
 		return $this;

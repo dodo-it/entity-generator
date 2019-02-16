@@ -1,8 +1,8 @@
 <?php declare (strict_types=1);
 
-namespace DodoIt\DibiEntity\Generator;
+namespace DodoIt\EntityGenerator\Generator;
 
-use DodoIt\DibiEntity\Entity;
+use DodoIt\EntityGenerator\Entity;
 
 
 class Column extends Entity
