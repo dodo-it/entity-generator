@@ -5,14 +5,10 @@ class CategoryEntity extends Entity
 {
 	public const TABLE = 'categories';
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $id;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $name;
 
 

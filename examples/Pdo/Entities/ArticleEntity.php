@@ -5,34 +5,22 @@ class ArticleEntity extends Entity
 {
 	public const TABLE = 'articles';
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $id;
 
-	/**
-	 * @var int
-	 */
+	/** @var int */
 	protected $category_id;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $title;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $content;
 
-	/**
-	 * @var bool
-	 */
+	/** @var bool */
 	protected $published;
 
-	/**
-	 * @var \DateTime
-	 */
+	/** @var \DateTime */
 	protected $created_at;
 
 

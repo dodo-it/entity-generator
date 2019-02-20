@@ -18,62 +18,14 @@ class Generator
 	private $repository;
 
 	/**
-	 * @var string
+	 * @var Config
 	 */
-	private $path;
+	private $config;
 
-	/**
-	 * @var string
-	 */
-	private $namespace;
-
-	/**
-	 * @var string[]
-	 */
-	private $typeMapping;
-
-	/**
-	 * @var array
-	 */
-	private $replacements;
-
-	/**
-	 * @var string
-	 */
-	private $prefix;
-
-	/**
-	 * @var string
-	 */
-	private $suffix;
-
-	/**
-	 * @var string
-	 */
-	private $extends;
-
-	/**
-	 * @var bool
-	 */
-	private $gettersAndSetters;
-
-	/**
-	 * @var string
-	 */
-	private $propertyVisibility;
-
-	public function __construct(Repository $repository, array $config)
+	public function __construct(Repository $repository, Config $config)
 	{
 		$this->repository = $repository;
-		$this->path = $config['path'];
-		$this->namespace = $config['namespace'];
-		$this->typeMapping = $config['typeMapping'];
-		$this->replacements = $config['replacements'];
-		$this->prefix = $config['prefix'];
-		$this->suffix = $config['suffix'];
-		$this->extends = $config['extends'];
-		$this->gettersAndSetters = $config['gettersAndSetters'];
-		$this->propertyVisibility = $config['propertyVisibility'];
+		$this->config = $config;
 	}
 
 
@@ -102,10 +54,10 @@ class Generator
 	public function generateEntity(string $table): void
 	{
 		$file = new PhpFile();
-		$namespace = $file->addNamespace($this->namespace);
+		$namespace = $file->addNamespace($this->config->namespace);
 
 		$shortClassName = $this->getClassName($table);
-		$fqnClassName = '\\' . $this->namespace . '\\' . $shortClassName;
+		$fqnClassName = '\\' . $this->config->namespace . '\\' . $shortClassName;
 		$entity = $namespace->addClass($shortClassName);
 
 		$entity->addConstant('TABLE', $table)->setVisibility('public');
@@ -113,7 +65,7 @@ class Generator
 		if(class_exists( $fqnClassName)){
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 		}
-		$entity->setExtends($this->extends);
+		$entity->setExtends($this->config->extends);
 		$columns = $this->repository->getTableColumns($table);
 		foreach($columns as $column) {
 			$this->validateColumnName($table, $column);
@@ -122,16 +74,16 @@ class Generator
 			}
 			$this->generateColumn($entity, $column);
 		}
-		file_put_contents($this->path . '/' . $shortClassName . '.php', $file->__toString());
+		file_put_contents($this->config->path . '/' . $shortClassName . '.php', $file->__toString());
 	}
 
 
 	protected function getClassName(string $table): string
 	{
-		if(isset($this->replacements[$table])) {
-			return $this->replacements[$table];
+		if(isset($this->config->replacements[$table])) {
+			return $this->config->replacements[$table];
 		}
-		return $this->prefix . Inflector::singularize(Inflector::classify($table)) . $this->suffix;
+		return $this->config->prefix . Inflector::singularize(Inflector::classify($table)) . $this->config->suffix;
 	}
 
 	/**
@@ -150,25 +102,27 @@ class Generator
 	{
 		$type = $this->getColumnType($column);
 		$entity->addProperty($column->getField())
-			->setVisibility($this->propertyVisibility)
+			->setVisibility($this->config->propertyVisibility)
 			->addComment('')
 			->addComment('@var ' . $type)
 			->addComment('');
-		if(!$this->gettersAndSetters) {
-			return;
-		}
-		$getter = $entity->addMethod('get' . Inflector::classify($column->getField(), '_'));
-		$getter->setVisibility('public')
-			->addBody('return $this->' . $column->getField() . ';')
-			->setReturnType($type)
-			->setReturnNullable($column->isNullable());
 
-		$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
-		$setter->setVisibility('public');
-		$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
-		$setter->addBody('$this[\'' . $column->getField() . '\'] = $value;');
-		$setter->addBody('return $this;');
-		$setter->setReturnType('self');
+		if($this->config->generateGetters) {
+			$getter = $entity->addMethod('get' . Inflector::classify($column->getField(), '_'));
+			$getter->setVisibility('public')
+				->addBody('return $this->' . $column->getField() . ';')
+				->setReturnType($type)
+				->setReturnNullable($column->isNullable());
+		}
+
+		if($this->config->generateSetters) {
+			$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
+			$setter->setVisibility('public');
+			$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
+			$setter->addBody('$this[\'' . $column->getField() . '\'] = $value;');
+			$setter->addBody('return $this;');
+			$setter->setReturnType('self');
+		}
 	}
 
 
@@ -178,7 +132,7 @@ class Generator
 		if(Strings::contains($dbColumnType, '(')) {
 			$dbColumnType = Strings::lower(Strings::before($dbColumnType, '('));
 		}
-		$typeMapping = Helper::multiArrayFlip($this->typeMapping);
+		$typeMapping = Helper::multiArrayFlip($this->config->typeMapping);
 		if(isset($typeMapping[$dbColumnType])) {
 			return $typeMapping[$dbColumnType];
 		}
@@ -192,7 +146,7 @@ class Generator
 		$entity->setMethods( $from->getMethods());
 
 		foreach($entity->methods as $method) {
-			$fqnClassName = '\\' . $this->namespace . '\\' . $entity->getName();
+			$fqnClassName = '\\' . $this->config->namespace . '\\' . $entity->getName();
 			$body = $this->getMethodBody($fqnClassName, $method->getName());
 			$method->setBody($body);
 		}
