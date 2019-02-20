@@ -23,7 +23,7 @@
   "require": {
     "php": "^7.1",
     "nette/utils": "^2.4",
-    "nette/php-generator": "^2.6",
+    "nette/php-generator": "^2.6|^3.0",
     "symfony/console": "^4.2",
     "doctrine/inflector": "^1.3"
   },
