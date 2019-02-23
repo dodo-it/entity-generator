@@ -1,5 +1,12 @@
-## About
+
+
+## Entity generator
 Typed entity generator from database. It can generate entities for whole database, table/view and from query
+
+-----
+
+[![Build Status](https://travis-ci.org/dodo-it/entity-generator.svg?branch=master)](https://travis-ci.org/dodo-it/entity-generator)
+
 
 ## Installation
 
