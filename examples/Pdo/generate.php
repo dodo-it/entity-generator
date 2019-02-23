@@ -10,6 +10,6 @@ $config = new \DodoIt\EntityGenerator\Generator\Config([
 
 $pdo = new \PDO('mysql:dbname=example;host=127.0.0.1', 'root', '');
 
-$generatorFactory = new \DodoIt\EntityGenerator\GeneratorFactory($pdo);
+$generatorFactory = new \DodoIt\EntityGenerator\Factory\GeneratorPdoFactory($pdo);
 $generator = $generatorFactory->create($config);
 $generator->generate();
