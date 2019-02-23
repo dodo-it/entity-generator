@@ -29,7 +29,7 @@
     "doctrine/inflector": "^1.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "^8.0"
+    "phpunit/phpunit": ">=7.0"
   },
   "scripts": {
     "qa": [
@@ -40,10 +40,10 @@
       "codefixer"
     ],
     "tests": [
-      "phpunit --configuration tests/unit/phpunit.xml tests/unit/Tests"
+      "phpunit --configuration tests/phpunit.xml tests/"
     ],
     "coverage": [
-      "phpunit --configuration testsphpunit.xml tests --coverage-clover=coverage.xml"
+      "phpunit --configuration tests/phpunit.xml tests --coverage-clover=coverage.xml"
     ],
     "phpstan-install": [
       "mkdir -p temp/phpstan",
