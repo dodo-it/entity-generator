@@ -3,7 +3,7 @@
 namespace DodoIt\EntityGenerator\Generator;
 
 
-class Repository
+class Repository implements IRepository
 {
 
 	/**

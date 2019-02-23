@@ -13,7 +13,7 @@ class Generator
 	use SmartObject;
 
 	/**
-	 * @var Repository
+	 * @var IRepository
 	 */
 	private $repository;
 
@@ -22,7 +22,7 @@ class Generator
 	 */
 	private $config;
 
-	public function __construct(Repository $repository, Config $config)
+	public function __construct(IRepository $repository, Config $config)
 	{
 		$this->repository = $repository;
 		$this->config = $config;

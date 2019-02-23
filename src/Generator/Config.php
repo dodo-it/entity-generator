@@ -7,6 +7,16 @@ use DodoIt\EntityGenerator\Entity;
 class Config
 {
 
+	public function __construct(?array $config = null)
+	{
+		if($config === null) {
+			return;
+		}
+		foreach ($config as $key => $value) {
+			$this->$key = $value;
+		}
+	}
+
 	/**
 	 * @var string
 	 */
@@ -75,4 +85,31 @@ class Config
 	 */
 	public $propertyVisibility = 'protected';
 
+	/**
+	 * @param string $name
+	 * @throws \Exception
+	 */
+	public function __get($name)
+	{
+		throw new \Exception('Configuration "' . $name . '" does not exist!');
+	}
+
+	/**
+	 * @param string $name
+	 * @param mixed  $value
+	 * @throws \Exception
+	 */
+	public function __set($name, $value)
+	{
+		throw new \Exception('Configuration "' . $name . '" does not exist!');
+	}
+
+	/**
+	 * @param string $name
+	 * @throws \Exception
+	 */
+	public function __isset($name)
+	{
+		throw new \Exception('Configuration "' . $name . '" does not exist!');
+	}
 }
