@@ -1,6 +1,6 @@
-<?php
+<?php declare(strict_types = 1);
 
-namespace DodoIt\EntityGenerator\Generator;
+namespace DodoIt\EntityGenerator\Repository;
 
 interface IRepository
 {
@@ -15,4 +15,5 @@ interface IRepository
 	public function createViewFromQuery(string $name, string $query): void;
 
 	public function dropView(string $name): void;
+
 }

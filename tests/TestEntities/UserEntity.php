@@ -1,22 +1,25 @@
-<?php
+<?php declare(strict_types = 1);
+
 namespace DodoIt\EntityGenerator\Tests\TestEntities;
 
-use DodoIt\EntityGenerator\Entity;
+use DateTime;
+use DateTimeInterface;
+use DodoIt\EntityGenerator\Entity\Entity;
 
 class UserEntity extends Entity
 {
+
 	/** @var int */
 	protected $id;
 
 	/** @var string */
 	protected $username;
 
-	/** @var \DateTimeInterface|null */
+	/** @var DateTimeInterface|null */
 	protected $last_login;
 
 	/** @var bool */
 	protected $active;
-
 
 	public function getId(): int
 	{
@@ -44,13 +47,13 @@ class UserEntity extends Entity
 	}
 
 
-	public function getLastLogin(): ?\DateTime
+	public function getLastLogin(): ?DateTime
 	{
 		return $this->last_login;
 	}
 
 
-	public function setLastLogin(\DateTime $value): self
+	public function setLastLogin(DateTime $value): self
 	{
 		$this['last_login'] = $value;
 		return $this;

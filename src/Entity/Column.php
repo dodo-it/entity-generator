@@ -1,43 +1,27 @@
-<?php declare (strict_types=1);
+<?php declare (strict_types = 1);
 
-namespace DodoIt\EntityGenerator\Generator;
-
-use DodoIt\EntityGenerator\Entity;
-
+namespace DodoIt\EntityGenerator\Entity;
 
 class Column extends Entity
 {
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $Field;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $Type;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $Null;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $Key;
 
-	/**
-	 * @var string
-	 */
+	/** @var string */
 	protected $Default;
 
-	/**
-	 * @var $Extra
-	 */
+	/** @var string */
 	protected $Extra;
-
 
 	public function getField(): string
 	{
@@ -73,4 +57,5 @@ class Column extends Entity
 	{
 		return $this->Extra;
 	}
+
 }

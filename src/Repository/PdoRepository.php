@@ -1,18 +1,17 @@
-<?php declare (strict_types=1);
+<?php declare (strict_types = 1);
 
-namespace DodoIt\EntityGenerator\Generator;
+namespace DodoIt\EntityGenerator\Repository;
 
+use DodoIt\EntityGenerator\Entity\Column;
+use PDO;
 
-class Repository implements IRepository
+class PdoRepository implements IRepository
 {
 
-	/**
-	 * @var \PDO
-	 */
+	/** @var PDO */
 	private $db;
 
-
-	public function __construct(\PDO $db)
+	public function __construct(PDO $db)
 	{
 		$this->db = $db;
 	}
@@ -23,13 +22,16 @@ class Repository implements IRepository
 	 */
 	public function getTables(): array
 	{
-		return $this->db->query('SHOW TABLES')->fetchAll(\PDO::FETCH_COLUMN, 0);
+		return $this->db->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN, 0);
 	}
 
+	/**
+	 * @return Column[]
+	 */
 	public function getTableColumns(string $table): array
 	{
 		$query = $this->db->query('SHOW COLUMNS FROM `' . $table . '`');
-		$query->setFetchMode(\PDO::FETCH_CLASS, Column::class);
+		$query->setFetchMode(PDO::FETCH_CLASS, Column::class);
 		return $query->fetchAll();
 	}
 
@@ -44,4 +46,5 @@ class Repository implements IRepository
 	{
 		$this->db->query('DROP VIEW `' . $name . '`')->execute();
 	}
+
 }

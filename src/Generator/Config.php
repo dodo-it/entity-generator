@@ -2,14 +2,14 @@
 
 namespace DodoIt\EntityGenerator\Generator;
 
-use DodoIt\EntityGenerator\Entity;
+use DodoIt\EntityGenerator\Entity\Entity;
 
 class Config
 {
 
 	public function __construct(?array $config = null)
 	{
-		if($config === null) {
+		if ($config === null) {
 			return;
 		}
 		foreach ($config as $key => $value) {
@@ -87,6 +87,7 @@ class Config
 
 	/**
 	 * @param string $name
+	 * @return void
 	 * @throws \Exception
 	 */
 	public function __get($name)
@@ -97,6 +98,7 @@ class Config
 	/**
 	 * @param string $name
 	 * @param mixed  $value
+	 * @return void
 	 * @throws \Exception
 	 */
 	public function __set($name, $value)
@@ -106,10 +108,12 @@ class Config
 
 	/**
 	 * @param string $name
+	 * @return void
 	 * @throws \Exception
 	 */
 	public function __isset($name)
 	{
 		throw new \Exception('Configuration "' . $name . '" does not exist!');
 	}
+
 }

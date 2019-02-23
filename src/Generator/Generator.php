@@ -1,25 +1,26 @@
-<?php declare (strict_types=1);
+<?php declare (strict_types = 1);
 
 namespace DodoIt\EntityGenerator\Generator;
 
 use Doctrine\Common\Inflector\Inflector;
+use DodoIt\EntityGenerator\Entity\Column;
+use DodoIt\EntityGenerator\Repository\IRepository;
+use Exception;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
+use ReflectionMethod;
 
 class Generator
 {
+
 	use SmartObject;
 
-	/**
-	 * @var IRepository
-	 */
+	/** @var IRepository */
 	private $repository;
 
-	/**
-	 * @var Config
-	 */
+	/** @var Config */
 	private $config;
 
 	public function __construct(IRepository $repository, Config $config)
@@ -29,18 +30,18 @@ class Generator
 	}
 
 
-	public function generate(?string $table = NULL, ?string $query = NULL)
+	public function generate(?string $table = null, ?string $query = null): void
 	{
-		if(!empty($query)) {
-			if(empty($table)) {
-				throw new \Exception('When using query table argument has to be provided!');
+		if ($query !== null) {
+			if ($table === null) {
+				throw new Exception('When using query table argument has to be provided!');
 			}
 			$this->repository->createViewFromQuery($table, $query);
 			$this->generateEntity($table);
 			$this->repository->dropView($table, $query);
 			return;
 		}
-		if($table !== NULL) {
+		if ($table !== null) {
 			$this->generateEntity($table);
 			return;
 		}
@@ -62,12 +63,12 @@ class Generator
 
 		$entity->addConstant('TABLE', $table)->setVisibility('public');
 
-		if(class_exists( $fqnClassName)){
+		if (class_exists($fqnClassName)) {
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 		}
 		$entity->setExtends($this->config->extends);
 		$columns = $this->repository->getTableColumns($table);
-		foreach($columns as $column) {
+		foreach ($columns as $column) {
 			$this->validateColumnName($table, $column);
 			if (isset($entity->properties[$column->getField()])) {
 				continue;
@@ -80,19 +81,19 @@ class Generator
 
 	protected function getClassName(string $table): string
 	{
-		if(isset($this->config->replacements[$table])) {
+		if (isset($this->config->replacements[$table])) {
 			return $this->config->replacements[$table];
 		}
 		return $this->config->prefix . Inflector::singularize(Inflector::classify($table)) . $this->config->suffix;
 	}
 
 	/**
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	protected function validateColumnName(string $table, Column $column): void
 	{
 		if (Strings::contains($column->getField(), '(')) {
-			throw new \Exception('Bad naming for ' . $column->getField() . ' in table ' . $table .
+			throw new Exception('Bad naming for ' . $column->getField() . ' in table ' . $table .
 				', please change name in database or use AS in views');
 		}
 	}
@@ -107,15 +108,15 @@ class Generator
 			->addComment('@var ' . $type)
 			->addComment('');
 
-		if($this->config->generateGetters) {
-			$getter = $entity->addMethod('get' . Inflector::classify($column->getField(), '_'));
+		if ($this->config->generateGetters) {
+			$getter = $entity->addMethod('get' . Inflector::classify($column->getField()));
 			$getter->setVisibility('public')
 				->addBody('return $this->' . $column->getField() . ';')
 				->setReturnType($type)
 				->setReturnNullable($column->isNullable());
 		}
 
-		if($this->config->generateSetters) {
+		if ($this->config->generateSetters) {
 			$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
 			$setter->setVisibility('public');
 			$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
@@ -129,11 +130,11 @@ class Generator
 	protected function getColumnType(Column $column): string
 	{
 		$dbColumnType = $column->getType();
-		if(Strings::contains($dbColumnType, '(')) {
+		if (Strings::contains($dbColumnType, '(')) {
 			$dbColumnType = Strings::lower(Strings::before($dbColumnType, '('));
 		}
 		$typeMapping = Helper::multiArrayFlip($this->config->typeMapping);
-		if(isset($typeMapping[$dbColumnType])) {
+		if (isset($typeMapping[$dbColumnType])) {
 			return $typeMapping[$dbColumnType];
 		}
 		return 'string';
@@ -143,9 +144,9 @@ class Generator
 	{
 		$entity->setProperties($from->getProperties());
 
-		$entity->setMethods( $from->getMethods());
+		$entity->setMethods($from->getMethods());
 
-		foreach($entity->methods as $method) {
+		foreach ($entity->methods as $method) {
 			$fqnClassName = '\\' . $this->config->namespace . '\\' . $entity->getName();
 			$body = $this->getMethodBody($fqnClassName, $method->getName());
 			$method->setBody($body);
@@ -155,7 +156,7 @@ class Generator
 
 	private function getMethodBody(string $class, string $name): string
 	{
-		$func = new \ReflectionMethod($class, $name);
+		$func = new ReflectionMethod($class, $name);
 		$startLine = $func->getStartLine() + 1;
 		$length = $func->getEndLine() - $startLine - 1;
 
@@ -167,4 +168,5 @@ class Generator
 		}
 		return $body;
 	}
+
 }
