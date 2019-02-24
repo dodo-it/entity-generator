@@ -108,6 +108,11 @@ class Generator
 			->addComment('@var ' . $type)
 			->addComment('');
 
+		if ($this->config->generateColumnConstant) {
+			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
+			$entity->addConstant($columnConstant, $column->getField());
+		}
+
 		if ($this->config->generateGetters) {
 			$getter = $entity->addMethod('get' . Inflector::classify($column->getField()));
 			$getter->setVisibility('public')
