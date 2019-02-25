@@ -4,7 +4,7 @@ namespace Examples\Pdo\Entities;
 
 // you can create your own entity class, no need to extend \DodoIt\EntityGenerator\Entity
 // this is not the code I would ever use in production but its just a showoff code for library
-class Entity extends \DodoIt\EntityGenerator\Entity
+class Entity extends \DodoIt\EntityGenerator\Entity\Entity
 {
 	public function __construct(array $arr = [])
 	{

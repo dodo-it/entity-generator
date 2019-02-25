@@ -78,6 +78,16 @@ class Config
 	/**
 	 * @var bool
 	 */
+	public $generateColumnConstant = true;
+
+	/**
+	 * @var string
+	 */
+	public $columnConstantPrefix = 'COL_';
+
+	/**
+	 * @var bool
+	 */
 	public $generateProperties = true;
 
 	/**
