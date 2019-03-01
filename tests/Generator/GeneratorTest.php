@@ -2,7 +2,6 @@
 
 namespace Generator;
 
-use App\Models\Entities\ArticleEntity;
 use DodoIt\EntityGenerator\Entity\Column;
 use DodoIt\EntityGenerator\Generator\Config;
 use DodoIt\EntityGenerator\Generator\Generator;
@@ -41,32 +40,32 @@ class GeneratorTest extends TestCase
 			'Type' => 'int(11)',
 			'Null' => 'NO',
 			'Key' => 'PRI',
-			'Default' => NULL,
-			'Extra' => 'auto_increment'
+			'Default' => null,
+			'Extra' => 'auto_increment',
 		]);
 		$this->tableColumns[] = new Column([
 			'Field' => 'title',
 			'Type' => 'varchar(25)',
 			'Null' => 'YES',
-			'Key' => NULL,
-			'Default' => NULL,
-			'Extra' => NULL
+			'Key' => null,
+			'Default' => null,
+			'Extra' => null,
 		]);
 		$this->tableColumns[] = new Column([
 				'Field' => 'published',
 				'Type' => 'tinyint(1)',
 				'Null' => 'NO',
-				'Key' => NULL,
+				'Key' => null,
 				'Default' => 1,
-				'Extra' => NULL
+				'Extra' => null,
 			]);
 		$this->tableColumns[] = new Column([
 			'Field' => 'created_at',
 			'Type' => 'datetime',
 			'Null' => 'YES',
-			'Key' => NULL,
+			'Key' => null,
 			'Default' => 1,
-			'Extra' => NULL
+			'Extra' => null,
 		]);
 		$this->config = new Config();
 		$this->repository = $this->getMockForAbstractClass(IRepository::class);
@@ -80,10 +79,9 @@ class GeneratorTest extends TestCase
 		$this->config->generateSetters = false;
 		$this->config->generateColumnConstant = false;
 		$this->config->generatePhpDocProperties = false;
-		$generator = new Generator($this->repository, $this->config);
 		$this->repository->expects($this->once())->method('getTableColumns')->with('articles')->willReturn($this->tableColumns);
 		$this->config->path = __DIR__;
-		$generator->generateEntity('articles');
+		$this->generator->generateEntity('articles');
 		$entityFile = __DIR__ . '/ArticleEntity.php';
 		$this->assertFileExists($entityFile);
 		include $entityFile;
@@ -95,4 +93,5 @@ class GeneratorTest extends TestCase
 		$this->assertEquals($properties['created_at']->getComment(), '@var \DateTime');
 		unlink($entityFile);
 	}
+
 }
