@@ -86,6 +86,16 @@ class Config
 	public $propertyVisibility = 'protected';
 
 	/**
+	 * @var bool
+	 */
+	public $generatePhpDocProperties = false;
+
+	/**
+	 * @var string
+	 */
+	public $phpDocProperty = '@property';
+
+	/**
 	 * @param string $name
 	 * @return void
 	 * @throws \Exception
