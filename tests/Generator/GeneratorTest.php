@@ -8,7 +8,6 @@ use DodoIt\EntityGenerator\Generator\Config;
 use DodoIt\EntityGenerator\Generator\Generator;
 use DodoIt\EntityGenerator\Repository\IRepository;
 use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\PhpFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +34,7 @@ class GeneratorTest extends TestCase
 	 */
 	private $generator;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		$this->tableColumns[] = new Column([
 			'Field' => 'id',
