@@ -38,7 +38,7 @@ class Generator
 			}
 			$this->repository->createViewFromQuery($table, $query);
 			$this->generateEntity($table);
-			$this->repository->dropView($table, $query);
+			$this->repository->dropView($table);
 			return;
 		}
 		if ($table !== null) {
@@ -103,7 +103,7 @@ class Generator
 	{
 		$type = $this->getColumnType($column);
 
-		if($this->config->generateProperties) {
+		if ($this->config->generateProperties) {
 			$entity->addProperty($column->getField())
 				->setVisibility($this->config->propertyVisibility)
 				->addComment('@var ' . $type);
@@ -114,8 +114,8 @@ class Generator
 			$entity->addConstant($columnConstant, $column->getField());
 		}
 
-		if($this->config->generatePhpDocProperties) {
-			$entity->addComment($this->config->phpDocProperty .  ' ' . $type . ' $' .$column->getField());
+		if ($this->config->generatePhpDocProperties) {
+			$entity->addComment($this->config->phpDocProperty . ' ' . $type . ' $' . $column->getField());
 		}
 
 		if ($this->config->generateColumnConstant) {
