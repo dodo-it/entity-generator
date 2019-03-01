@@ -102,11 +102,21 @@ class Generator
 	protected function generateColumn(ClassType $entity, Column $column): void
 	{
 		$type = $this->getColumnType($column);
-		$entity->addProperty($column->getField())
-			->setVisibility($this->config->propertyVisibility)
-			->addComment('')
-			->addComment('@var ' . $type)
-			->addComment('');
+
+		if($this->config->generateProperties) {
+			$entity->addProperty($column->getField())
+				->setVisibility($this->config->propertyVisibility)
+				->addComment('@var ' . $type);
+		}
+
+		if ($this->config->generateColumnConstant) {
+			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
+			$entity->addConstant($columnConstant, $column->getField());
+		}
+
+		if($this->config->generatePhpDocProperties) {
+			$entity->addComment($this->config->phpDocProperty .  ' ' . $type . ' $' .$column->getField());
+		}
 
 		if ($this->config->generateColumnConstant) {
 			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
