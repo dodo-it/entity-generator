@@ -77,7 +77,7 @@ class Generator
 			$mapping[$column->getField()] = Inflector::classify($column->getField());
 			$this->generateColumn($entity, $column);
 		}
-		if($this->config->generateMapping) {
+		if ($this->config->generateMapping) {
 			$entity->addProperty('mapping', $mapping)->setVisibility('protected')
 				->addComment('')->addComment('@var string[]')->addComment('');
 		}
