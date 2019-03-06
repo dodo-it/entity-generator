@@ -90,7 +90,7 @@ class Generator
 		if (isset($this->config->replacements[$table])) {
 			return $this->config->replacements[$table];
 		}
-		return $this->config->prefix . Helper::camelize($table) . $this->config->suffix;
+		return $this->config->prefix . Helper::camelize($table, $this->config->replacements) . $this->config->suffix;
 	}
 
 	/**

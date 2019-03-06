@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ruleset name="Heimkaup ruleset">
+<ruleset name="ruleset">
     <rule ref="./vendor/ninjify/coding-standard/ruleset.xml">
         <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration"/>
         <exclude name="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment" />

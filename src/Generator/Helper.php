@@ -22,12 +22,12 @@ class Helper
 		return $result;
 	}
 
-	public static function camelize(string $input, string $separator = '_'): string
+	public static function camelize(string $input, array $replacements= [], string $separator = '_'): string
 	{
 		$words = explode($separator, $input);
 		$result = '';
 		foreach ($words as $word) {
-			$result .= Inflector::singularize(ucfirst($word));
+			$result .= $replacements[$word] ?? Inflector::singularize(ucfirst($word));
 		}
 		return $result;
 	}
