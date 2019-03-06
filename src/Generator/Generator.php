@@ -63,7 +63,7 @@ class Generator
 
 		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 
-		if (class_exists($fqnClassName)) {
+		if (class_exists($fqnClassName) && !$this->config->rewrite) {
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 		}
 		$entity->setExtends($this->config->extends);
