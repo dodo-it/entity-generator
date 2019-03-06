@@ -117,7 +117,7 @@ class Generator
 
 		if ($this->config->generateColumnConstant) {
 			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
-			if($columnConstant === 'CLASS') {
+			if ($columnConstant === 'CLASS') {
 				$columnConstant = '_CLASS';
 			}
 			$entity->addConstant($columnConstant, $column->getField())->setVisibility('public');
