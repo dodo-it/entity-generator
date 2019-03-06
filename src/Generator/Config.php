@@ -44,6 +44,13 @@ class Config
 	public $replacements = [];
 
 	/**
+	 * set to true to generate new entities and completelly ignore old ones
+	 *
+	 * @var bool
+	 */
+	public $rewrite = false;
+
+	/**
 	 * set to null to skip table constant
 	 *
 	 * @var string|null
