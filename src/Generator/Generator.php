@@ -68,12 +68,18 @@ class Generator
 		}
 		$entity->setExtends($this->config->extends);
 		$columns = $this->repository->getTableColumns($table);
+		$mapping = [];
 		foreach ($columns as $column) {
 			$this->validateColumnName($table, $column);
 			if (isset($entity->properties[$column->getField()])) {
 				continue;
 			}
+			$mapping[$column->getField()] = Inflector::classify($column->getField());
 			$this->generateColumn($entity, $column);
+		}
+		if ($this->config->generateMapping) {
+			$entity->addProperty('mapping', $mapping)->setVisibility('protected')
+				->addComment('')->addComment('@var string[]')->addComment('');
 		}
 		file_put_contents($this->config->path . '/' . $shortClassName . '.php', $file->__toString());
 	}
@@ -111,16 +117,11 @@ class Generator
 
 		if ($this->config->generateColumnConstant) {
 			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
-			$entity->addConstant($columnConstant, $column->getField());
+			$entity->addConstant($columnConstant, $column->getField())->setVisibility('public');
 		}
 
 		if ($this->config->generatePhpDocProperties) {
 			$entity->addComment($this->config->phpDocProperty . ' ' . $type . ' $' . $column->getField());
-		}
-
-		if ($this->config->generateColumnConstant) {
-			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
-			$entity->addConstant($columnConstant, $column->getField());
 		}
 
 		if ($this->config->generateGetters) {

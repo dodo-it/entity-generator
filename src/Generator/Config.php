@@ -58,6 +58,13 @@ class Config
 	public $tableConstant = 'TABLE_NAME';
 
 	/**
+	 * generate mapping array where key is entity property name and value is table column name
+	 *
+	 * @var bool
+	 */
+	public $generateMapping = false;
+
+	/**
 	 * @var string
 	 */
 	public $prefix = '';
