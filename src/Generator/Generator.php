@@ -103,7 +103,7 @@ class Generator
 	{
 		$type = $this->getColumnType($column);
 
-		if($this->config->generateProperties) {
+		if ($this->config->generateProperties) {
 			$entity->addProperty($column->getField())
 				->setVisibility($this->config->propertyVisibility)
 				->addComment('@var ' . $type);
@@ -114,8 +114,8 @@ class Generator
 			$entity->addConstant($columnConstant, $column->getField());
 		}
 
-		if($this->config->generatePhpDocProperties) {
-			$entity->addComment($this->config->phpDocProperty .  ' ' . $type . ' $' .$column->getField());
+		if ($this->config->generatePhpDocProperties) {
+			$entity->addComment($this->config->phpDocProperty . ' ' . $type . ' $' . $column->getField());
 		}
 
 		if ($this->config->generateColumnConstant) {
@@ -125,7 +125,7 @@ class Generator
 
 		if ($this->config->generateGetters) {
 			$getter = $entity->addMethod('get' . Inflector::classify($column->getField()));
-			$getter->setVisibility('public')
+			$getter->setVisibility($this->config->getterVisibility)
 				->addBody('return $this->' . $column->getField() . ';')
 				->setReturnType($type)
 				->setReturnNullable($column->isNullable());
@@ -133,7 +133,7 @@ class Generator
 
 		if ($this->config->generateSetters) {
 			$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
-			$setter->setVisibility('public');
+			$setter->setVisibility($this->config->setterVisibility);
 			$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
 			$setter->addBody('$this[\'' . $column->getField() . '\'] = $value;');
 			$setter->addBody('return $this;');
