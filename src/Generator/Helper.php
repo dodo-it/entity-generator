@@ -22,7 +22,7 @@ class Helper
 		return $result;
 	}
 
-	public static function camelize($input, $separator = '_')
+	public static function camelize(string $input, string $separator = '_'): string
 	{
 		$words = explode($separator, $input);
 		$result = '';
@@ -31,4 +31,5 @@ class Helper
 		}
 		return $result;
 	}
+
 }
