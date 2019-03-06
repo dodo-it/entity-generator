@@ -61,7 +61,7 @@ class Generator
 		$fqnClassName = '\\' . $this->config->namespace . '\\' . $shortClassName;
 		$entity = $namespace->addClass($shortClassName);
 
-		$entity->addConstant('TABLE', $table)->setVisibility('public');
+		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 
 		if (class_exists($fqnClassName)) {
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
