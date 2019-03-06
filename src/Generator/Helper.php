@@ -2,6 +2,8 @@
 
 namespace DodoIt\EntityGenerator\Generator;
 
+use Doctrine\Common\Inflector\Inflector;
+
 class Helper
 {
 
@@ -20,4 +22,13 @@ class Helper
 		return $result;
 	}
 
+	public static function camelize($input, $separator = '_')
+	{
+		$words = explode($separator, $input);
+		$result = '';
+		foreach ($words as $word) {
+			$result .= Inflector::singularize(ucfirst($word));
+		}
+		return $result;
+	}
 }
