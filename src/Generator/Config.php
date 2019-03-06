@@ -83,7 +83,17 @@ class Config
 	/**
 	 * @var string
 	 */
+	public $getterBody = 'return $this->__FIELD__;';
+
+	/**
+	 * @var string
+	 */
 	public $setterVisibility = 'public';
+
+	/**
+	 * @var string
+	 */
+	public $setterBody = '$this[\'__FIELD__\'] = $value;' . "\n" . 'return $this;';
 
 	/**
 	 * @var bool
