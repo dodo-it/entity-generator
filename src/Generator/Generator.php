@@ -130,7 +130,7 @@ class Generator
 		if ($this->config->generateGetters) {
 			$getter = $entity->addMethod('get' . Inflector::classify($column->getField()));
 			$getter->setVisibility($this->config->getterVisibility)
-				->addBody('return $this->' . $column->getField() . ';')
+				->addBody(str_replace('__FIELD__', $column->getField(), $this->config->getterBody))
 				->setReturnType($type)
 				->setReturnNullable($column->isNullable());
 		}
@@ -139,8 +139,7 @@ class Generator
 			$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
 			$setter->setVisibility($this->config->setterVisibility);
 			$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
-			$setter->addBody('$this[\'' . $column->getField() . '\'] = $value;');
-			$setter->addBody('return $this;');
+			$setter->addBody(str_replace('__FIELD__', $column->getField(), $this->config->setterBody));
 			$setter->setReturnType('self');
 		}
 	}
