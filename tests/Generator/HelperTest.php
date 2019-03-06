@@ -22,4 +22,10 @@ class HelperTest extends TestCase
 		]);
 	}
 
+	public function testCamelize()
+	{
+		$this->assertEquals('User', Helper::camelize('users'));
+		$this->assertEquals('UserLogin', Helper::camelize('users_logins'));
+	}
+
 }

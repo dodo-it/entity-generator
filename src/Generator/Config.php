@@ -76,6 +76,16 @@ class Config
 	public $generateSetters = true;
 
 	/**
+	 * @var string
+	 */
+	public $getterVisibility = 'public';
+
+	/**
+	 * @var string
+	 */
+	public $setterVisibility = 'public';
+
+	/**
 	 * @var bool
 	 */
 	public $generateColumnConstant = true;
