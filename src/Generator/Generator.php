@@ -78,7 +78,7 @@ class Generator
 			$this->generateColumn($entity, $column);
 		}
 		if($this->config->generateMapping) {
-			$entity->addProperty('mapping', $mapping)
+			$entity->addProperty('mapping', $mapping)->setVisibility('protected')
 				->addComment('')->addComment('@var string[]')->addComment('');
 		}
 		file_put_contents($this->config->path . '/' . $shortClassName . '.php', $file->__toString());
