@@ -34,7 +34,7 @@ class Config
 		'int' => ['int', 'bigint', 'mediumint', 'smallint' ],
 		'float' => ['decimal', 'float'],
 		'bool' => ['bit', 'tinyint'],
-		'\DateTime' => ['date', 'datetime', 'timestamp'],
+		'\DateTimeInterface' => ['date', 'datetime', 'timestamp'],
 		'\DateInterval' => ['time'],
 	];
 
