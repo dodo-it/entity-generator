@@ -90,7 +90,7 @@ class GeneratorTest extends TestCase
 		$this->assertCount(count($this->tableColumns), $properties);
 		$this->assertEquals($properties['id']->getComment(), '@var int');
 		$this->assertEquals($properties['title']->getComment(), '@var string');
-		$this->assertEquals($properties['created_at']->getComment(), '@var \DateTime');
+		$this->assertEquals($properties['created_at']->getComment(), '@var \DateTimeInterface');
 		unlink($entityFile);
 	}
 
