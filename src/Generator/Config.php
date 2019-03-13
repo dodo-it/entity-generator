@@ -65,6 +65,13 @@ class Config
 	public $generateMapping = false;
 
 	/**
+	 * Generate primary key constant, value of constant is name of field which is primary
+	 *
+	 * @var string|null
+	 */
+	public $primaryKeyConstant;
+
+	/**
 	 * @var string
 	 */
 	public $prefix = '';

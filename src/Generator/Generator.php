@@ -111,6 +111,10 @@ class Generator
 				->setVisibility($this->config->propertyVisibility)
 				->addComment('@var ' . $type);
 		}
+		if ($this->config->primaryKeyConstant !== null && $column->isPrimary()) {
+			$entity->addConstant($this->config->primaryKeyConstant, $column->getField())
+				->setVisibility('public');
+		}
 
 		if ($this->config->generateColumnConstant) {
 			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
