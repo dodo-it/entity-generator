@@ -58,4 +58,9 @@ class Column extends Entity
 		return $this->Extra;
 	}
 
+	public function isPrimary(): bool
+	{
+		return $this->Key === 'PRI';
+	}
+
 }
