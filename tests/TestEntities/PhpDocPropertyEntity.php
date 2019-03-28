@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace DodoIt\EntityGenerator\Tests\TestEntities;
+
+use DodoIt\EntityGenerator\Entity\Entity;
 
 /**
  * @property int $id
@@ -8,8 +10,9 @@ namespace DodoIt\EntityGenerator\Tests\TestEntities;
  * @property int $published
  * @property \DateTimeInterface $created_at
  */
-class PhpDocPropertyEntity extends \DodoIt\EntityGenerator\Entity\Entity
+class PhpDocPropertyEntity extends Entity
 {
+
 	public const TABLE_NAME = 'php_doc_properties';
 
 	public function getId(): int
@@ -62,4 +65,5 @@ class PhpDocPropertyEntity extends \DodoIt\EntityGenerator\Entity\Entity
 		$this['created_at'] = $value;
 		return $this;
 	}
+
 }
