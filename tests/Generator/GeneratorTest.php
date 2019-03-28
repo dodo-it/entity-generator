@@ -68,6 +68,7 @@ class GeneratorTest extends TestCase
 			'Extra' => null,
 		]);
 		$this->config = new Config();
+		$this->config->namespace = 'DodoIt\EntityGenerator\Tests\TestEntities';
 		$this->repository = $this->getMockForAbstractClass(IRepository::class);
 		$this->generator = new Generator($this->repository, $this->config);
 	}
@@ -92,6 +93,18 @@ class GeneratorTest extends TestCase
 		$this->assertEquals($properties['title']->getComment(), '@var string');
 		$this->assertEquals($properties['created_at']->getComment(), '@var \DateTimeInterface');
 		unlink($entityFile);
+	}
+
+	public function testGenerate_WithRewriteFalseAndPhpDocProperties_ShouldNotReGenerate()
+	{
+		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
+		$this->config->generatePhpDocProperties = true;
+		$this->config->generateProperties = false;
+		$this->config->generateColumnConstant = false;
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('php_doc_properties')->willReturn($this->tableColumns);
+		$this->config->path = __DIR__ . '/../TestEntities';
+		$this->generator->generateEntity('php_doc_properties');
 	}
 
 }

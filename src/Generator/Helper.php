@@ -32,4 +32,22 @@ class Helper
 		return $result;
 	}
 
+	/**
+	 * @return string[]
+	 */
+	public static function getPhpDocComments(string $phpDoc): array
+	{
+		preg_match_all(
+			'~^  [ \t*]*  @property(|-read|-write)  [ \t]+  [^\s$]+  [ \t]+  \$  (\w+)  ()~mx',
+			$phpDoc,
+			$matches,
+			PREG_SET_ORDER
+		);
+		$result = [];
+		foreach ($matches as $match) {
+			$result[] = $match[2];
+		}
+		return $result;
+	}
+
 }
