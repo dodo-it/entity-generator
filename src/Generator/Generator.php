@@ -63,15 +63,18 @@ class Generator
 
 		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 
-		if (class_exists($fqnClassName) && !$this->config->rewrite) {
+		$phpDocProperties = [];
+		if (!$this->config->rewrite && class_exists($fqnClassName)) {
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
+			$phpDocProperties = Helper::getPhpDocComments($entity->getComment());
 		}
 		$entity->setExtends($this->config->extends);
+
 		$columns = $this->repository->getTableColumns($table);
 		$mapping = [];
 		foreach ($columns as $column) {
 			$this->validateColumnName($table, $column);
-			if (isset($entity->properties[$column->getField()])) {
+			if (isset($entity->properties[$column->getField()]) || in_array($column->getField(), $phpDocProperties, true)) {
 				continue;
 			}
 			$mapping[$column->getField()] = Inflector::classify($column->getField());
@@ -162,7 +165,7 @@ class Generator
 	private function cloneEntityFromExistingEntity(ClassType $entity, ClassType $from): void
 	{
 		$entity->setProperties($from->getProperties());
-
+		$entity->setComment($from->getComment());
 		$entity->setMethods($from->getMethods());
 
 		foreach ($entity->methods as $method) {

@@ -28,4 +28,18 @@ class HelperTest extends TestCase
 		$this->assertEquals('UserLogin', Helper::camelize('users_logins'));
 	}
 
+	public function testGetPhpDocProperties()
+	{
+		$comment = '/**
+		 * @property int $id
+		 * @property string $title
+		 * @property int $published
+		 * @property \DateTimeInterface $created_at
+		 */';
+		$result = Helper::getPhpDocComments($comment);
+		$this->assertCount(4, $result);
+		$this->assertEquals('id', $result[0]);
+		$this->assertEquals('created_at', $result[3]);
+	}
+
 }
