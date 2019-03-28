@@ -74,7 +74,7 @@ class Generator
 		$mapping = [];
 		foreach ($columns as $column) {
 			$this->validateColumnName($table, $column);
-			if (isset($entity->properties[$column->getField()]) || in_array($column->getField(), $phpDocProperties, false)) {
+			if (isset($entity->properties[$column->getField()]) || in_array($column->getField(), $phpDocProperties, true)) {
 				continue;
 			}
 			$mapping[$column->getField()] = Inflector::classify($column->getField());
