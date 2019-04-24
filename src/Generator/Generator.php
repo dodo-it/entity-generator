@@ -61,19 +61,19 @@ class Generator
 		$fqnClassName = '\\' . $this->config->namespace . '\\' . $shortClassName;
 		$entity = $namespace->addClass($shortClassName);
 
-		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
-
 		$phpDocProperties = [];
 		if (!$this->config->rewrite && class_exists($fqnClassName)) {
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 			$phpDocProperties = Helper::getPhpDocComments($entity->getComment());
 		}
+		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 		$entity->setExtends($this->config->extends);
 
 		$columns = $this->repository->getTableColumns($table);
 		$mapping = [];
 		foreach ($columns as $column) {
 			$this->validateColumnName($table, $column);
+			$this->generateColumnConstant($entity, $column);
 			if (isset($entity->properties[$column->getField()]) || in_array($column->getField(), $phpDocProperties, true)) {
 				continue;
 			}
@@ -81,6 +81,9 @@ class Generator
 			$this->generateColumn($entity, $column);
 		}
 		if ($this->config->generateMapping) {
+			if ($entity->getProperty('mapping')) {
+				$mapping += $entity->getProperty('mapping')->getValue();
+			}
 			$entity->addProperty('mapping', $mapping)->setVisibility('protected')
 				->addComment('')->addComment('@var string[]')->addComment('');
 		}
@@ -113,18 +116,6 @@ class Generator
 			$entity->addProperty($column->getField())
 				->setVisibility($this->config->propertyVisibility)
 				->addComment('@var ' . $type);
-		}
-		if ($this->config->primaryKeyConstant !== null && $column->isPrimary()) {
-			$entity->addConstant($this->config->primaryKeyConstant, $column->getField())
-				->setVisibility('public');
-		}
-
-		if ($this->config->generateColumnConstant) {
-			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
-			if ($columnConstant === 'CLASS') {
-				$columnConstant = '_CLASS';
-			}
-			$entity->addConstant($columnConstant, $column->getField())->setVisibility('public');
 		}
 
 		if ($this->config->generatePhpDocProperties) {
@@ -162,11 +153,29 @@ class Generator
 		return 'string';
 	}
 
+	protected function generateColumnConstant(ClassType $entity, Column $column): void
+	{
+		if ($this->config->primaryKeyConstant !== null && $column->isPrimary()) {
+			$entity->addConstant($this->config->primaryKeyConstant, $column->getField())
+				->setVisibility('public');
+		}
+		if ($this->config->generateColumnConstant) {
+			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
+			if ($columnConstant === 'CLASS') {
+				$columnConstant = '_CLASS';
+			}
+			if(!isset($entity->getConstants()[$column])) {
+				$entity->addConstant($columnConstant, $column->getField())->setVisibility('public');
+			}
+		}
+	}
+
 	private function cloneEntityFromExistingEntity(ClassType $entity, ClassType $from): void
 	{
 		$entity->setProperties($from->getProperties());
 		$entity->setComment($from->getComment());
 		$entity->setMethods($from->getMethods());
+		$entity->getNamespace()->getUses($from->getNamespace()->getUses());
 
 		foreach ($entity->methods as $method) {
 			$fqnClassName = '\\' . $this->config->namespace . '\\' . $entity->getName();
