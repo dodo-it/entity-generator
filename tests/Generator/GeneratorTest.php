@@ -81,9 +81,9 @@ class GeneratorTest extends TestCase
 		$this->config->generateColumnConstant = false;
 		$this->config->generatePhpDocProperties = false;
 		$this->repository->expects($this->once())->method('getTableColumns')->with('articles')->willReturn($this->tableColumns);
-		$this->config->path = __DIR__;
+		$this->config->path = __DIR__ . '/../TestEntities/';
 		$this->generator->generateEntity('articles');
-		$entityFile = __DIR__ . '/ArticleEntity.php';
+		$entityFile = $this->config->path . 'ArticleEntity.php';
 		$this->assertFileExists($entityFile);
 		include $entityFile;
 		$entityClass = ClassType::from($this->config->namespace . '\ArticleEntity');
@@ -105,6 +105,33 @@ class GeneratorTest extends TestCase
 			->with('php_doc_properties')->willReturn($this->tableColumns);
 		$this->config->path = __DIR__ . '/../TestEntities';
 		$this->generator->generateEntity('php_doc_properties');
+		$string = file_get_contents($this->config->path . '/PhpDocPropertyEntity.php');
+		$this->assertNotFalse(strpos($string, 'property int $published'));
+	}
+
+	public function testGenerate_WithMappingAndPhpDocProperties_ShouldGenerateMapping()
+	{
+		$this->config->generatePhpDocProperties = false;
+		$this->config->generateProperties = false;
+		$this->config->generateColumnConstant = false;
+		$this->config->generateMapping = true;
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('mapping_test')->willReturn($this->tableColumns);
+		$this->config->path = __DIR__ . '/../TestEntities';
+		$this->generator->generateEntity('mapping_test');
+		$entityFile = $this->config->path . '/MappingTestEntity.php';
+		$this->assertFileExists($entityFile);
+		include $entityFile;
+		$reflection = ClassType::from('DodoIt\EntityGenerator\Tests\TestEntities\MappingTestEntity');
+		$mapping = $reflection->getProperty('mapping');
+		$expected = [
+			'id' => 'Id',
+			'title' => 'Title',
+			'published' => 'Published',
+			'created_at' => 'CreatedAt',
+		];
+		$this->assertEquals($expected, $mapping->getValue());
+		unlink($entityFile);
 	}
 
 }
