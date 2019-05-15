@@ -64,7 +64,7 @@ class Generator
 		$phpDocProperties = [];
 		if (!$this->config->rewrite && class_exists($fqnClassName)) {
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
-			$phpDocProperties = Helper::getPhpDocComments($entity->getComment());
+			$phpDocProperties = Helper::getPhpDocComments($entity->getComment() ?? '');
 		}
 		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 		$entity->setExtends($this->config->extends);

@@ -73,7 +73,7 @@ class GeneratorTest extends TestCase
 		$this->generator = new Generator($this->repository, $this->config);
 	}
 
-	public function testGenerate_WithPropertiesOnly_ShouldGenerateOnlyProperties()
+	public function testGenerateEntity_WithPropertiesOnly_ShouldGenerateOnlyProperties()
 	{
 		$this->config->generateProperties = true;
 		$this->config->generateGetters = false;
@@ -95,7 +95,7 @@ class GeneratorTest extends TestCase
 		unlink($entityFile);
 	}
 
-	public function testGenerate_WithRewriteFalseAndPhpDocProperties_ShouldNotReGenerate()
+	public function testGenerateEntity_WithRewriteFalseAndPhpDocProperties_ShouldNotReGenerate()
 	{
 		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
 		$this->config->generatePhpDocProperties = true;
@@ -109,7 +109,7 @@ class GeneratorTest extends TestCase
 		$this->assertNotFalse(strpos($string, 'property int $published'));
 	}
 
-	public function testGenerate_WithMappingAndPhpDocProperties_ShouldGenerateMapping()
+	public function testGenerateEntity_WithMappingAndPhpDocProperties_ShouldGenerateMapping()
 	{
 		$this->config->generatePhpDocProperties = false;
 		$this->config->generateProperties = false;
@@ -134,7 +134,7 @@ class GeneratorTest extends TestCase
 		unlink($entityFile);
 	}
 
-	public function testGenerate_WithGenerateConstant_ShouldGenerateConstants()
+	public function testGenerateEntity_WithGenerateConstant_ShouldGenerateConstants()
 	{
 		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
 		$this->config->generatePhpDocProperties = false;
@@ -147,12 +147,55 @@ class GeneratorTest extends TestCase
 		$entityFile = $this->config->path . '/ConstantEntity.php';
 		$this->generator->generateEntity('constants');
 		include $entityFile;
-		$reflection = ClassType::from('DodoIt\EntityGenerator\Tests\TestEntities\ConstantEntity');
-		$constants = $reflection->getConstants();
-		$this->assertArrayHasKey('TABLE_NAME', $constants);
-		$this->assertArrayHasKey('PK_CONSTANT', $constants);
-		$this->assertEquals('id', $constants['PK_CONSTANT']->getValue());
-		$this->assertEquals('title', $constants['TITLE']->getValue());
+
+		$entityContents = file_get_contents($entityFile);
+		$this->assertContains('const TABLE_NAME = \'constants\'', $entityContents);
+		$this->assertContains('const PK_CONSTANT = \'id\'', $entityContents);
+		$this->assertContains('const ID = \'id\'', $entityContents);
+		unlink($entityFile);
+	}
+
+	public function testGenerate_WithTableName_ShouldGenerateOnlyThatTable()
+	{
+		$this->config->path = __DIR__ . '/../TestEntities';
+		$entityFile = $this->config->path . '/TestEntity.php';
+
+		$this->repository->expects($this->never())->method('getTables');
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('test')->willReturn($this->tableColumns);
+		$this->generator->generate('test');
+		$this->assertFileExists($entityFile);
+		unlink($entityFile);
+	}
+
+	public function testGenerate_WithoutParameters_ShouldGenerateEntitiesForWholeTable()
+	{
+		$this->config->path = __DIR__ . '/../TestEntities';
+
+		$this->repository->expects($this->once())->method('getTables')->willReturn(['table1', 'table2']);
+		$this->repository->expects($this->exactly(2))->method('getTableColumns')
+			->withConsecutive(['table1'], ['table2'])->willReturn($this->tableColumns);
+		$this->generator->generate();
+
+		$entityFile = $this->config->path . '/Table1Entity.php';
+		$this->assertFileExists($entityFile);
+		unlink($entityFile);
+		$entityFile = $this->config->path . '/Table2Entity.php';
+		$this->assertFileExists($entityFile);
+		unlink($entityFile);
+	}
+
+	public function testGenerate_WithQuery_ShouldGenerateEntityFromQuery()
+	{
+		$this->config->path = __DIR__ . '/../TestEntities';
+
+		$this->repository->expects($this->never())->method('getTables');
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('query')->willReturn($this->tableColumns);
+		$this->generator->generate('query', 'SELECT col1, col2 FROM bla');
+
+		$entityFile = $this->config->path . '/QueryEntity.php';
+		$this->assertFileExists($entityFile);
 		unlink($entityFile);
 	}
 
