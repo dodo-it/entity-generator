@@ -81,7 +81,7 @@ class Generator
 			$this->generateColumn($entity, $column);
 		}
 		if ($this->config->generateMapping) {
-			if ($entity->properties['mapping']) {
+			if (isset($entity->properties['mapping'])) {
 				$mapping += $entity->getProperty('mapping')->getValue();
 			}
 			$entity->addProperty('mapping', $mapping)->setVisibility('protected')
