@@ -164,7 +164,9 @@ class Generator
 			if ($columnConstant === 'CLASS') {
 				$columnConstant = '_CLASS';
 			}
-			if (!isset($entity->getConstants()[$column])) {
+
+			$constants = $entity->getConstants();
+			if (!isset($constants[$column->getField()])) {
 				$entity->addConstant($columnConstant, $column->getField())->setVisibility('public');
 			}
 		}

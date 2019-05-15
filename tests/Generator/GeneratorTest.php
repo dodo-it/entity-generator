@@ -134,4 +134,26 @@ class GeneratorTest extends TestCase
 		unlink($entityFile);
 	}
 
+	public function testGenerate_WithGenerateConstant_ShouldGenerateConstants()
+	{
+		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
+		$this->config->generatePhpDocProperties = false;
+		$this->config->generateProperties = false;
+		$this->config->primaryKeyConstant = 'PK_CONSTANT';
+		$this->config->generateColumnConstant = true;
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('constants')->willReturn($this->tableColumns);
+		$this->config->path = __DIR__ . '/../TestEntities';
+		$entityFile = $this->config->path . '/ConstantEntity.php';
+		$this->generator->generateEntity('constants');
+		include $entityFile;
+		$reflection = ClassType::from('DodoIt\EntityGenerator\Tests\TestEntities\ConstantEntity');
+		$constants = $reflection->getConstants();
+		$this->assertArrayHasKey('TABLE_NAME', $constants);
+		$this->assertArrayHasKey('PK_CONSTANT', $constants);
+		$this->assertEquals('id', $constants['PK_CONSTANT']->getValue());
+		$this->assertEquals('title', $constants['TITLE']->getValue());
+		unlink($entityFile);
+	}
+
 }
