@@ -177,7 +177,6 @@ class Generator
 		$entity->setProperties($from->getProperties());
 		$entity->setComment($from->getComment());
 		$entity->setMethods($from->getMethods());
-		$entity->getNamespace()->getUses($from->getNamespace()->getUses());
 
 		foreach ($entity->methods as $method) {
 			$fqnClassName = '\\' . $this->config->namespace . '\\' . $entity->getName();
