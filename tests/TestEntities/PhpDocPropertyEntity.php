@@ -1,18 +1,15 @@
-<?php declare(strict_types = 1);
+<?php
 
 namespace DodoIt\EntityGenerator\Tests\TestEntities;
-
-use DodoIt\EntityGenerator\Entity\Entity;
 
 /**
  * @property int $id
  * @property string $title
- * @property bool $published
+ * @property int $published
  * @property \DateTimeInterface $created_at
  */
-class PhpDocPropertyEntity extends Entity
+class PhpDocPropertyEntity extends \DodoIt\EntityGenerator\Entity\Entity
 {
-
 	public const TABLE_NAME = 'php_doc_properties';
 
 	public function getId(): int
@@ -24,7 +21,6 @@ class PhpDocPropertyEntity extends Entity
 	public function setId(int $value): self
 	{
 		$this['id'] = $value;
-
 		return $this;
 	}
 
@@ -38,7 +34,6 @@ class PhpDocPropertyEntity extends Entity
 	public function setTitle(?string $value): self
 	{
 		$this['title'] = $value;
-
 		return $this;
 	}
 
@@ -52,7 +47,6 @@ class PhpDocPropertyEntity extends Entity
 	public function setPublished(bool $value): self
 	{
 		$this['published'] = $value;
-
 		return $this;
 	}
 
@@ -66,8 +60,6 @@ class PhpDocPropertyEntity extends Entity
 	public function setCreatedAt(?\DateTimeInterface $value): self
 	{
 		$this['created_at'] = $value;
-
 		return $this;
 	}
-
 }
