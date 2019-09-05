@@ -30,6 +30,7 @@ class UserEntity extends Entity
 	public function setId(int $value): self
 	{
 		$this['id'] = $value;
+
 		return $this;
 	}
 
@@ -43,6 +44,7 @@ class UserEntity extends Entity
 	public function setUsername(string $value): self
 	{
 		$this['username'] = $value;
+
 		return $this;
 	}
 
@@ -56,6 +58,7 @@ class UserEntity extends Entity
 	public function setLastLogin(DateTime $value): self
 	{
 		$this['last_login'] = $value;
+
 		return $this;
 	}
 
@@ -69,6 +72,7 @@ class UserEntity extends Entity
 	public function setActive(bool $value): self
 	{
 		$this['active'] = $value;
+
 		return $this;
 	}
 

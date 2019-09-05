@@ -32,6 +32,7 @@ class PdoRepository implements IRepository
 	{
 		$query = $this->db->query('SHOW COLUMNS FROM `' . $table . '`');
 		$query->setFetchMode(PDO::FETCH_CLASS, Column::class);
+
 		return $query->fetchAll();
 	}
 

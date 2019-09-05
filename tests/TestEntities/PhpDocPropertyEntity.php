@@ -7,7 +7,7 @@ use DodoIt\EntityGenerator\Entity\Entity;
 /**
  * @property int $id
  * @property string $title
- * @property int $published
+ * @property bool $published
  * @property \DateTimeInterface $created_at
  */
 class PhpDocPropertyEntity extends Entity
@@ -24,6 +24,7 @@ class PhpDocPropertyEntity extends Entity
 	public function setId(int $value): self
 	{
 		$this['id'] = $value;
+
 		return $this;
 	}
 
@@ -37,6 +38,7 @@ class PhpDocPropertyEntity extends Entity
 	public function setTitle(?string $value): self
 	{
 		$this['title'] = $value;
+
 		return $this;
 	}
 
@@ -50,6 +52,7 @@ class PhpDocPropertyEntity extends Entity
 	public function setPublished(bool $value): self
 	{
 		$this['published'] = $value;
+
 		return $this;
 	}
 
@@ -63,6 +66,7 @@ class PhpDocPropertyEntity extends Entity
 	public function setCreatedAt(?\DateTimeInterface $value): self
 	{
 		$this['created_at'] = $value;
+
 		return $this;
 	}
 

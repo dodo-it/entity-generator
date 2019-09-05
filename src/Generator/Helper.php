@@ -14,11 +14,13 @@ class Helper
 	public static function multiArrayFlip(array $array): array
 	{
 		$result = [];
+
 		foreach ($array as $key => $insideArray) {
 			foreach ($insideArray as $value) {
 				$result[$value] = $key;
 			}
 		}
+
 		return $result;
 	}
 
@@ -26,9 +28,11 @@ class Helper
 	{
 		$words = explode($separator, $input);
 		$result = '';
+
 		foreach ($words as $word) {
 			$result .= $replacements[$word] ?? Inflector::singularize(ucfirst($word));
 		}
+
 		return $result;
 	}
 
@@ -44,9 +48,11 @@ class Helper
 			PREG_SET_ORDER
 		);
 		$result = [];
+
 		foreach ($matches as $match) {
 			$result[] = $match[2];
 		}
+
 		return $result;
 	}
 

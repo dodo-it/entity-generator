@@ -12,6 +12,7 @@ class Config
 		if ($config === null) {
 			return;
 		}
+
 		foreach ($config as $key => $value) {
 			$this->$key = $value;
 		}
