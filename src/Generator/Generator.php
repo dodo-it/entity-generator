@@ -36,16 +36,22 @@ class Generator
 			if ($table === null) {
 				throw new Exception('When using query table argument has to be provided!');
 			}
+
 			$this->repository->createViewFromQuery($table, $query);
 			$this->generateEntity($table);
 			$this->repository->dropView($table);
+
 			return;
 		}
+
 		if ($table !== null) {
 			$this->generateEntity($table);
+
 			return;
 		}
+
 		$tables = $this->repository->getTables();
+
 		foreach ($tables as $oneTable) {
 			$this->generateEntity($oneTable);
 		}
@@ -62,31 +68,39 @@ class Generator
 		$entity = $namespace->addClass($shortClassName);
 
 		$phpDocProperties = [];
+
 		if (!$this->config->rewrite && class_exists($fqnClassName)) {
 			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
 			$phpDocProperties = Helper::getPhpDocComments($entity->getComment() ?? '');
 		}
+
 		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 		$entity->setExtends($this->config->extends);
 
 		$columns = $this->repository->getTableColumns($table);
 		$mapping = [];
+
 		foreach ($columns as $column) {
 			$this->validateColumnName($table, $column);
 			$this->generateColumnConstant($entity, $column);
+
 			if (isset($entity->properties[$column->getField()]) || in_array($column->getField(), $phpDocProperties, true)) {
 				continue;
 			}
+
 			$mapping[$column->getField()] = Inflector::classify($column->getField());
 			$this->generateColumn($entity, $column);
 		}
+
 		if ($this->config->generateMapping) {
 			if (isset($entity->properties['mapping'])) {
 				$mapping += $entity->getProperty('mapping')->getValue();
 			}
+
 			$entity->addProperty('mapping', $mapping)->setVisibility('protected')
 				->addComment('')->addComment('@var string[]')->addComment('');
 		}
+
 		file_put_contents($this->config->path . '/' . $shortClassName . '.php', $file->__toString());
 	}
 
@@ -143,13 +157,17 @@ class Generator
 	protected function getColumnType(Column $column): string
 	{
 		$dbColumnType = $column->getType();
+
 		if (Strings::contains($dbColumnType, '(')) {
 			$dbColumnType = Strings::lower(Strings::before($dbColumnType, '('));
 		}
+
 		$typeMapping = Helper::multiArrayFlip($this->config->typeMapping);
+
 		if (isset($typeMapping[$dbColumnType])) {
 			return $typeMapping[$dbColumnType];
 		}
+
 		return 'string';
 	}
 
@@ -159,13 +177,16 @@ class Generator
 			$entity->addConstant($this->config->primaryKeyConstant, $column->getField())
 				->setVisibility('public');
 		}
+
 		if ($this->config->generateColumnConstant) {
 			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
+
 			if ($columnConstant === 'CLASS') {
 				$columnConstant = '_CLASS';
 			}
 
 			$constants = $entity->getConstants();
+
 			if (!isset($constants[$column->getField()])) {
 				$entity->addConstant($columnConstant, $column->getField())->setVisibility('public');
 			}
@@ -195,9 +216,11 @@ class Generator
 		$source = file($func->getFileName());
 		$bodyLines = array_slice($source, $startLine, $length);
 		$body = '';
+
 		foreach ($bodyLines as $bodyLine) {
 			$body .= Strings::after($bodyLine, "\t\t");
 		}
+
 		return $body;
 	}
 

@@ -149,9 +149,9 @@ class GeneratorTest extends TestCase
 		include $entityFile;
 
 		$entityContents = file_get_contents($entityFile);
-		$this->assertContains('const TABLE_NAME = \'constants\'', $entityContents);
-		$this->assertContains('const PK_CONSTANT = \'id\'', $entityContents);
-		$this->assertContains('const ID = \'id\'', $entityContents);
+		$this->assertStringContainsString('const TABLE_NAME = \'constants\'', $entityContents);
+		$this->assertStringContainsString('const PK_CONSTANT = \'id\'', $entityContents);
+		$this->assertStringContainsString('const ID = \'id\'', $entityContents);
 		unlink($entityFile);
 	}
 

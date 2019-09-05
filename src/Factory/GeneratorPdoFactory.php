@@ -22,6 +22,7 @@ class GeneratorPdoFactory
 	{
 		$repository = new PdoRepository($this->pdo);
 		$generator = new Generator($repository, $config);
+
 		return $generator;
 	}
 
