@@ -1,6 +1,6 @@
 <?php declare (strict_types = 1);
 
-namespace Generator;
+namespace DodoIt\EntityGenerator\Tests;
 
 use DodoIt\EntityGenerator\Entity\Column;
 use DodoIt\EntityGenerator\Generator\Config;
