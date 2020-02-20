@@ -135,25 +135,25 @@ class GeneratorTest extends TestCase
 	}
 
 	public function testGenerateEntity_WithGenerateConstant_ShouldGenerateConstants()
-	{
-		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
-		$this->config->generatePhpDocProperties = false;
-		$this->config->generateProperties = false;
-		$this->config->primaryKeyConstant = 'PK_CONSTANT';
-		$this->config->generateColumnConstant = true;
-		$this->repository->expects($this->once())->method('getTableColumns')
-			->with('constants')->willReturn($this->tableColumns);
-		$this->config->path = __DIR__ . '/../TestEntities';
-		$entityFile = $this->config->path . '/ConstantEntity.php';
-		$this->generator->generateEntity('constants');
-		include $entityFile;
+{
+	//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
+	$this->config->generatePhpDocProperties = false;
+	$this->config->generateProperties = false;
+	$this->config->primaryKeyConstant = 'PK_CONSTANT';
+	$this->config->generateColumnConstant = true;
+	$this->repository->expects($this->once())->method('getTableColumns')
+		->with('constants')->willReturn($this->tableColumns);
+	$this->config->path = __DIR__ . '/../TestEntities';
+	$entityFile = $this->config->path . '/ConstantEntity.php';
+	$this->generator->generateEntity('constants');
+	include $entityFile;
 
-		$entityContents = file_get_contents($entityFile);
-		$this->assertStringContainsString('const TABLE_NAME = \'constants\'', $entityContents);
-		$this->assertStringContainsString('const PK_CONSTANT = \'id\'', $entityContents);
-		$this->assertStringContainsString('const ID = \'id\'', $entityContents);
-		unlink($entityFile);
-	}
+	$entityContents = file_get_contents($entityFile);
+	$this->assertStringContainsString('const TABLE_NAME = \'constants\'', $entityContents);
+	$this->assertStringContainsString('const PK_CONSTANT = \'id\'', $entityContents);
+	$this->assertStringContainsString('const ID = \'id\'', $entityContents);
+	unlink($entityFile);
+}
 
 	public function testGenerate_WithTableName_ShouldGenerateOnlyThatTable()
 	{
@@ -199,4 +199,30 @@ class GeneratorTest extends TestCase
 		unlink($entityFile);
 	}
 
+	public function testGenerateEntity_WithStrictlyTypedProperties_ShouldGenerateStrictlyTypedProperties()
+	{
+		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
+		$this->config->generatePhpDocProperties = false;
+		$this->config->generateProperties = true;
+		$this->config->generateGetters = false;
+		$this->config->strictlyTypedProperties = true;
+		$this->config->tableConstant = NULL;
+		$this->config->propertyVisibility = 'public';
+		$this->config->generateColumnConstant = false;
+		$this->config->addPropertyVarComment = false;
+		$this->config->generateSetters = false;
+
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('strictly_typed')->willReturn($this->tableColumns);
+		$this->config->path = __DIR__ . '/../TestEntities';
+		$entityFile = $this->config->path . '/StrictlyTypedEntity.php';
+		$this->generator->generateEntity('strictly_typed');
+
+		$entityContents = file_get_contents($entityFile);
+		$this->assertStringContainsString('public int $id;', $entityContents);
+		$this->assertStringContainsString('public ?string $title;', $entityContents);
+		$this->assertStringContainsString('public bool $published;', $entityContents);
+		$this->assertStringContainsString('public ?\DateTimeInterface $created_at;', $entityContents);
+		unlink($entityFile);
+	}
 }

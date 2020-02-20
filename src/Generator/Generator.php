@@ -61,6 +61,7 @@ class Generator
 	public function generateEntity(string $table): void
 	{
 		$file = new PhpFile();
+		$file->setStrictTypes($this->config->addDeclareStrictTypes);
 		$namespace = $file->addNamespace($this->config->namespace);
 
 		$shortClassName = $this->getClassName($table);
@@ -74,7 +75,10 @@ class Generator
 			$phpDocProperties = Helper::getPhpDocComments($entity->getComment() ?? '');
 		}
 
-		$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
+		if ($this->config->tableConstant !== NULL) {
+			$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
+		}
+
 		$entity->setExtends($this->config->extends);
 
 		$columns = $this->repository->getTableColumns($table);
@@ -127,9 +131,17 @@ class Generator
 		$type = $this->getColumnType($column);
 
 		if ($this->config->generateProperties) {
-			$entity->addProperty($column->getField())
-				->setVisibility($this->config->propertyVisibility)
-				->addComment('@var ' . $type);
+			$property = $entity->addProperty($column->getField())
+				->setVisibility($this->config->propertyVisibility);
+
+			if ($this->config->addPropertyVarComment) {
+				$property->addComment('@var ' . $type);
+			}
+
+			if ($this->config->strictlyTypedProperties) {
+				$property->setType($type);
+				$property->setNullable($column->isNullable());
+			}
 		}
 
 		if ($this->config->generatePhpDocProperties) {
