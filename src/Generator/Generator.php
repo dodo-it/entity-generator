@@ -61,7 +61,10 @@ class Generator
 	public function generateEntity(string $table): void
 	{
 		$file = new PhpFile();
-		$file->setStrictTypes($this->config->addDeclareStrictTypes);
+		if (method_exists($file, 'setStrictTypes')) {
+			$file->setStrictTypes($this->config->addDeclareStrictTypes);
+		}
+
 		$namespace = $file->addNamespace($this->config->namespace);
 
 		$shortClassName = $this->getClassName($table);
@@ -75,7 +78,7 @@ class Generator
 			$phpDocProperties = Helper::getPhpDocComments($entity->getComment() ?? '');
 		}
 
-		if ($this->config->tableConstant !== NULL) {
+		if ($this->config->tableConstant !== null) {
 			$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 		}
 
@@ -138,7 +141,7 @@ class Generator
 				$property->addComment('@var ' . $type);
 			}
 
-			if ($this->config->strictlyTypedProperties) {
+			if ($this->config->strictlyTypedProperties && method_exists($property, 'setType')) {
 				$property->setType($type);
 				$property->setNullable($column->isNullable());
 			}

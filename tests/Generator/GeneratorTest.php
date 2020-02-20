@@ -135,25 +135,25 @@ class GeneratorTest extends TestCase
 	}
 
 	public function testGenerateEntity_WithGenerateConstant_ShouldGenerateConstants()
-{
+	{
 	//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
-	$this->config->generatePhpDocProperties = false;
-	$this->config->generateProperties = false;
-	$this->config->primaryKeyConstant = 'PK_CONSTANT';
-	$this->config->generateColumnConstant = true;
-	$this->repository->expects($this->once())->method('getTableColumns')
-		->with('constants')->willReturn($this->tableColumns);
-	$this->config->path = __DIR__ . '/../TestEntities';
-	$entityFile = $this->config->path . '/ConstantEntity.php';
-	$this->generator->generateEntity('constants');
-	include $entityFile;
+		$this->config->generatePhpDocProperties = false;
+		$this->config->generateProperties = false;
+		$this->config->primaryKeyConstant = 'PK_CONSTANT';
+		$this->config->generateColumnConstant = true;
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('constants')->willReturn($this->tableColumns);
+		$this->config->path = __DIR__ . '/../TestEntities';
+		$entityFile = $this->config->path . '/ConstantEntity.php';
+		$this->generator->generateEntity('constants');
+		include $entityFile;
 
-	$entityContents = file_get_contents($entityFile);
-	$this->assertStringContainsString('const TABLE_NAME = \'constants\'', $entityContents);
-	$this->assertStringContainsString('const PK_CONSTANT = \'id\'', $entityContents);
-	$this->assertStringContainsString('const ID = \'id\'', $entityContents);
-	unlink($entityFile);
-}
+		$entityContents = file_get_contents($entityFile);
+		$this->assertStringContainsString('const TABLE_NAME = \'constants\'', $entityContents);
+		$this->assertStringContainsString('const PK_CONSTANT = \'id\'', $entityContents);
+		$this->assertStringContainsString('const ID = \'id\'', $entityContents);
+		unlink($entityFile);
+	}
 
 	public function testGenerate_WithTableName_ShouldGenerateOnlyThatTable()
 	{
@@ -206,7 +206,7 @@ class GeneratorTest extends TestCase
 		$this->config->generateProperties = true;
 		$this->config->generateGetters = false;
 		$this->config->strictlyTypedProperties = true;
-		$this->config->tableConstant = NULL;
+		$this->config->tableConstant = null;
 		$this->config->propertyVisibility = 'public';
 		$this->config->generateColumnConstant = false;
 		$this->config->addPropertyVarComment = false;
@@ -225,4 +225,5 @@ class GeneratorTest extends TestCase
 		$this->assertStringContainsString('public ?\DateTimeInterface $created_at;', $entityContents);
 		unlink($entityFile);
 	}
+
 }

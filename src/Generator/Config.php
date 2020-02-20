@@ -133,7 +133,7 @@ class Config
 	public $columnConstantPrefix = 'COL_';
 
 	/**
-¸¸	 * @var bool
+	 * @var bool
 	 */
 	public $generateProperties = true;
 
