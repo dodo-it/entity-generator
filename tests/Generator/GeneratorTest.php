@@ -151,9 +151,9 @@ class GeneratorTest extends TestCase
 		include $entityFile;
 
 		$entityContents = file_get_contents($entityFile);
-		$this->assertStringContainsString('const TABLE_NAME = \'constants\'', $entityContents);
-		$this->assertStringContainsString('const PK_CONSTANT = \'id\'', $entityContents);
-		$this->assertStringContainsString('const ID = \'id\'', $entityContents);
+		$this->assertRegExp('/const TABLE\_NAME \= \'constants\'/', $entityContents);
+		$this->assertRegExp('/const PK\_CONSTANT \= \'id\'/', $entityContents);
+		$this->assertRegExp('/const ID \= \'id\'/', $entityContents);
 		unlink($entityFile);
 	}
 
@@ -226,10 +226,10 @@ class GeneratorTest extends TestCase
 		$this->generator->generateEntity('strictly_typed');
 
 		$entityContents = file_get_contents($entityFile);
-		$this->assertStringContainsString('public int $id;', $entityContents);
-		$this->assertStringContainsString('public ?string $title;', $entityContents);
-		$this->assertStringContainsString('public bool $published;', $entityContents);
-		$this->assertStringContainsString('public ?\DateTimeInterface $created_at;', $entityContents);
+		$this->assertRegExp('/public int \$id;/', $entityContents);
+		$this->assertRegExp('/public \?string \$title;/', $entityContents);
+		$this->assertRegExp('/public bool \$published;/', $entityContents);
+		$this->assertRegExp('/public \?\\\DateTimeInterface \$created\_at;/', $entityContents);
 		unlink($entityFile);
 	}
 
