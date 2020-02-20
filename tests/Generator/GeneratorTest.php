@@ -6,7 +6,9 @@ use DodoIt\EntityGenerator\Entity\Column;
 use DodoIt\EntityGenerator\Generator\Config;
 use DodoIt\EntityGenerator\Generator\Generator;
 use DodoIt\EntityGenerator\Repository\IRepository;
+use Nette\NotSupportedException;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -201,6 +203,11 @@ class GeneratorTest extends TestCase
 
 	public function testGenerateEntity_WithStrictlyTypedProperties_ShouldGenerateStrictlyTypedProperties()
 	{
+		$file = new PhpFile();
+		if (!method_exists($file, 'setStrictTypes')) {
+			$this->expectException(NotSupportedException::class);
+		}
+
 		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
 		$this->config->generatePhpDocProperties = false;
 		$this->config->generateProperties = true;

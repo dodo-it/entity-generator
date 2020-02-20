@@ -6,6 +6,7 @@ use Doctrine\Common\Inflector\Inflector;
 use DodoIt\EntityGenerator\Entity\Column;
 use DodoIt\EntityGenerator\Repository\IRepository;
 use Exception;
+use Nette\NotSupportedException;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\SmartObject;
@@ -61,8 +62,12 @@ class Generator
 	public function generateEntity(string $table): void
 	{
 		$file = new PhpFile();
-		if (method_exists($file, 'setStrictTypes')) {
-			$file->setStrictTypes($this->config->addDeclareStrictTypes);
+		if ($this->config->addDeclareStrictTypes) {
+			if (!method_exists($file, 'setStrictTypes')) {
+				throw new NotSupportedException('You have set addDeclareStrictTypes but have phpgenerator dependency <3.2.0!');
+			} else {
+				$file->setStrictTypes($this->config->addDeclareStrictTypes);
+			}
 		}
 
 		$namespace = $file->addNamespace($this->config->namespace);
@@ -141,9 +146,13 @@ class Generator
 				$property->addComment('@var ' . $type);
 			}
 
-			if ($this->config->strictlyTypedProperties && method_exists($property, 'setType')) {
-				$property->setType($type);
-				$property->setNullable($column->isNullable());
+			if ($this->config->strictlyTypedProperties) {
+				if (!method_exists($property, 'setType')) {
+					throw new NotSupportedException('You have set strictlyTypedProperties but have phpgenerator dependency <3.3.0!');
+				} else {
+					$property->setType($type);
+					$property->setNullable($column->isNullable());
+				}
 			}
 		}
 
