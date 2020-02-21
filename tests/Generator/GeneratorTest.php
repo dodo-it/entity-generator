@@ -207,6 +207,7 @@ class GeneratorTest extends TestCase
 		$this->config->generatePhpDocProperties = false;
 		$this->config->generateProperties = true;
 		$this->config->generateGetters = false;
+		$this->config->addDeclareStrictTypes = true;
 		$this->config->strictlyTypedProperties = true;
 		$this->config->tableConstant = null;
 		$this->config->propertyVisibility = 'public';
@@ -226,6 +227,7 @@ class GeneratorTest extends TestCase
 		$this->generator->generateEntity('strictly_typed');
 
 		$entityContents = file_get_contents($entityFile);
+		$this->assertRegExp('/declare strict_types/', $entityContents);
 		$this->assertRegExp('/public int \$id;/', $entityContents);
 		$this->assertRegExp('/public \?string \$title;/', $entityContents);
 		$this->assertRegExp('/public bool \$published;/', $entityContents);
