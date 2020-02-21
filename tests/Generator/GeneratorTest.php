@@ -214,16 +214,19 @@ class GeneratorTest extends TestCase
 		$this->config->generateColumnConstant = false;
 		$this->config->addPropertyVarComment = false;
 		$this->config->generateSetters = false;
-
+		$this->config->path = __DIR__ . '/../TestEntities';
 		$file = new PhpFile();
 		if (!method_exists($file, 'setStrictTypes')) {
 			$this->expectException(NotSupportedException::class);
+			$this->generator->generateEntity('strictly_typed');
+			return;
 		}
 
 		$this->repository->expects($this->once())->method('getTableColumns')
 			->with('strictly_typed')->willReturn($this->tableColumns);
-		$this->config->path = __DIR__ . '/../TestEntities';
+
 		$entityFile = $this->config->path . '/StrictlyTypedEntity.php';
+
 		$this->generator->generateEntity('strictly_typed');
 
 		$entityContents = file_get_contents($entityFile);
