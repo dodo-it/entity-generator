@@ -227,7 +227,7 @@ class GeneratorTest extends TestCase
 		$this->generator->generateEntity('strictly_typed');
 
 		$entityContents = file_get_contents($entityFile);
-		$this->assertRegExp('/declare strict_types/', $entityContents);
+		$this->assertRegExp('/declare\(strict_types/', $entityContents);
 		$this->assertRegExp('/public int \$id;/', $entityContents);
 		$this->assertRegExp('/public \?string \$title;/', $entityContents);
 		$this->assertRegExp('/public bool \$published;/', $entityContents);
