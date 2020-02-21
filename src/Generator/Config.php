@@ -85,7 +85,7 @@ class Config
 	/**
 	 * @var bool
 	 */
-	public $addDeclareStrictTypes = true;
+	public $addDeclareStrictTypes = false;
 
 	/**
 	 * @var string

@@ -206,6 +206,7 @@ class GeneratorTest extends TestCase
 		$file = new PhpFile();
 		if (!method_exists($file, 'setStrictTypes')) {
 			$this->expectException(NotSupportedException::class);
+			return;
 		}
 
 		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
