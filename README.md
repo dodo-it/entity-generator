@@ -37,7 +37,16 @@ Tool is highly customizable and can generate various different entity types of w
 
  - PHP 7.4 typed properties
  ```php
+class ArticleEntity extends YourBaseEntity
+{
+	public int $id;
 
+	public ?string $title;
+
+	public bool $published;
+
+	public ?\DateTimeInterface $created_at;
+}
 ```
  - properties with phpdoc
 ```php
