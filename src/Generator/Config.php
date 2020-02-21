@@ -83,6 +83,11 @@ class Config
 	public $suffix = 'Entity';
 
 	/**
+	 * @var bool
+	 */
+	public $addDeclareStrictTypes = false;
+
+	/**
 	 * @var string
 	 */
 	public $extends = Entity::class;
@@ -131,6 +136,16 @@ class Config
 	 * @var bool
 	 */
 	public $generateProperties = true;
+
+	/**
+	 * @var bool
+	 */
+	public $strictlyTypedProperties = false;
+
+	/**
+	 * @var bool
+	 */
+	public $addPropertyVarComment = true;
 
 	/**
 	 * @var string

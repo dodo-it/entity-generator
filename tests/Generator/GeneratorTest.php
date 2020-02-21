@@ -6,7 +6,9 @@ use DodoIt\EntityGenerator\Entity\Column;
 use DodoIt\EntityGenerator\Generator\Config;
 use DodoIt\EntityGenerator\Generator\Generator;
 use DodoIt\EntityGenerator\Repository\IRepository;
+use Nette\NotSupportedException;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -136,7 +138,7 @@ class GeneratorTest extends TestCase
 
 	public function testGenerateEntity_WithGenerateConstant_ShouldGenerateConstants()
 	{
-		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
+	//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
 		$this->config->generatePhpDocProperties = false;
 		$this->config->generateProperties = false;
 		$this->config->primaryKeyConstant = 'PK_CONSTANT';
@@ -149,9 +151,9 @@ class GeneratorTest extends TestCase
 		include $entityFile;
 
 		$entityContents = file_get_contents($entityFile);
-		$this->assertStringContainsString('const TABLE_NAME = \'constants\'', $entityContents);
-		$this->assertStringContainsString('const PK_CONSTANT = \'id\'', $entityContents);
-		$this->assertStringContainsString('const ID = \'id\'', $entityContents);
+		$this->assertRegExp('/const TABLE\_NAME \= \'constants\'/', $entityContents);
+		$this->assertRegExp('/const PK\_CONSTANT \= \'id\'/', $entityContents);
+		$this->assertRegExp('/const ID \= \'id\'/', $entityContents);
 		unlink($entityFile);
 	}
 
@@ -196,6 +198,43 @@ class GeneratorTest extends TestCase
 
 		$entityFile = $this->config->path . '/QueryEntity.php';
 		$this->assertFileExists($entityFile);
+		unlink($entityFile);
+	}
+
+	public function testGenerateEntity_WithStrictlyTypedProperties_ShouldGenerateStrictlyTypedProperties()
+	{
+		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
+		$this->config->generatePhpDocProperties = false;
+		$this->config->generateProperties = true;
+		$this->config->generateGetters = false;
+		$this->config->addDeclareStrictTypes = true;
+		$this->config->strictlyTypedProperties = true;
+		$this->config->tableConstant = null;
+		$this->config->propertyVisibility = 'public';
+		$this->config->generateColumnConstant = false;
+		$this->config->addPropertyVarComment = false;
+		$this->config->generateSetters = false;
+		$this->config->path = __DIR__ . '/../TestEntities';
+		$file = new PhpFile();
+		if (!method_exists($file, 'setStrictTypes')) {
+			$this->expectException(NotSupportedException::class);
+			$this->generator->generateEntity('strictly_typed');
+			return;
+		}
+
+		$this->repository->expects($this->once())->method('getTableColumns')
+			->with('strictly_typed')->willReturn($this->tableColumns);
+
+		$entityFile = $this->config->path . '/StrictlyTypedEntity.php';
+
+		$this->generator->generateEntity('strictly_typed');
+
+		$entityContents = file_get_contents($entityFile);
+		$this->assertRegExp('/declare\(strict_types/', $entityContents);
+		$this->assertRegExp('/public int \$id;/', $entityContents);
+		$this->assertRegExp('/public \?string \$title;/', $entityContents);
+		$this->assertRegExp('/public bool \$published;/', $entityContents);
+		$this->assertRegExp('/public \?\\\DateTimeInterface \$created\_at;/', $entityContents);
 		unlink($entityFile);
 	}
 
