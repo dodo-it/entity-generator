@@ -14,8 +14,6 @@ Highly customizable (typed) entity generator from database. It can generate enti
 ## Installation
 
     $ composer require dodo-it/entity-generator
-## Entity support
- - PHP 7.4 typed entities
 
 ## How to run:
  ```php
@@ -32,7 +30,7 @@ Highly customizable (typed) entity generator from database. It can generate enti
     $generator->generate();
  ```
 
-## What kind of entities can I get:
+## What kind of entities can I get?
 Tool is highly customizable and can generate various different entity types of which most interesting are:
 
  - PHP 7.4 typed properties
