@@ -203,11 +203,6 @@ class GeneratorTest extends TestCase
 
 	public function testGenerateEntity_WithStrictlyTypedProperties_ShouldGenerateStrictlyTypedProperties()
 	{
-		$file = new PhpFile();
-		if (!method_exists($file, 'setStrictTypes')) {
-			$this->expectException(NotSupportedException::class);
-			return;
-		}
 
 		//we've put published as integer intentionally in PhpDocPropertyEntity so if we don't rewrite this should stay int and not become bool
 		$this->config->generatePhpDocProperties = false;
@@ -220,11 +215,18 @@ class GeneratorTest extends TestCase
 		$this->config->addPropertyVarComment = false;
 		$this->config->generateSetters = false;
 
+		$file = new PhpFile();
+		if (!method_exists($file, 'setStrictTypes')) {
+			$this->expectException(NotSupportedException::class);
+		}
+
 		$this->repository->expects($this->once())->method('getTableColumns')
 			->with('strictly_typed')->willReturn($this->tableColumns);
 		$this->config->path = __DIR__ . '/../TestEntities';
 		$entityFile = $this->config->path . '/StrictlyTypedEntity.php';
 		$this->generator->generateEntity('strictly_typed');
+
+
 
 		$entityContents = file_get_contents($entityFile);
 		$this->assertRegExp('/public int \$id;/', $entityContents);

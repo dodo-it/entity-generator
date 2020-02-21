@@ -1,8 +1,5 @@
-<?php declare(strict_types = 1);
-
+<?php
 namespace DodoIt\EntityGenerator\Tests\TestEntities;
-
-use DodoIt\EntityGenerator\Entity\Entity;
 
 /**
  * @property int $id
@@ -10,10 +7,10 @@ use DodoIt\EntityGenerator\Entity\Entity;
  * @property int $published
  * @property \DateTimeInterface $created_at
  */
-class PhpDocPropertyEntity extends Entity
+class PhpDocPropertyEntity extends \DodoIt\EntityGenerator\Entity\Entity
 {
-
 	public const TABLE_NAME = 'php_doc_properties';
+
 
 	public function getId(): int
 	{
