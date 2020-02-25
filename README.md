@@ -171,11 +171,11 @@ class ArticleEntity extends YourBaseEntity
 .
 
 ```
-- and much more, check src/Generator/Config.php for list of all options
+- almost any combination you can imagine, check src/Generator/Config.php for list of all options
 see example folder
 
 
-You can add your own methods to entities and change getter/setter functions, they won't be overriden when regenerated
+You can add your own methods to entities and change getter/setter functions, they won't be overriden when regenerated if rewrite flag is set to false
 
 
 ## Configuration
