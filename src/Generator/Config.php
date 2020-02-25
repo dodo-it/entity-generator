@@ -103,6 +103,11 @@ class Config
 	public $generateSetters = true;
 
 	/**
+	 * @var string|null
+	 */
+	public $setterReturnType = null;
+
+	/**
 	 * @var string
 	 */
 	public $getterVisibility = 'public';
@@ -120,7 +125,7 @@ class Config
 	/**
 	 * @var string
 	 */
-	public $setterBody = '$this[\'__FIELD__\'] = $value;' . "\n" . 'return $this;';
+	public $setterBody = '$this[\'__FIELD__\'] = $value;';
 
 	/**
 	 * @var bool

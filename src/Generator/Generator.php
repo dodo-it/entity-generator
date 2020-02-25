@@ -173,7 +173,7 @@ class Generator
 			$setter->setVisibility($this->config->setterVisibility);
 			$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
 			$setter->addBody(str_replace('__FIELD__', $column->getField(), $this->config->setterBody));
-			$setter->setReturnType('self');
+			$setter->setReturnType($this->config->setterReturnType);
 		}
 	}
 
