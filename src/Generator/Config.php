@@ -108,6 +108,13 @@ class Config
 	public $getterVisibility = 'public';
 
 	/**
+	 * Add trait to generated entity (use TraitName;)
+	 *
+	 * @var string|null
+	 */
+	public $useTrait = null;
+
+	/**
 	 * @var string
 	 */
 	public $getterBody = 'return $this->__FIELD__;';
