@@ -76,8 +76,8 @@ class Generator
 		$fqnClassName = '\\' . $this->config->namespace . '\\' . $shortClassName;
 		$entity = $namespace->addClass($shortClassName);
 
-		if ($this->config->useTrait !== NULL) {
-			$entity->addTrait($this->config->useTrait);
+		if ($this->config->addTrait !== null) {
+			$entity->addTrait($this->config->addTrait);
 		}
 
 		$phpDocProperties = [];

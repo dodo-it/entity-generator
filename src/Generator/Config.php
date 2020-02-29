@@ -112,7 +112,7 @@ class Config
 	 *
 	 * @var string|null
 	 */
-	public $useTrait = null;
+	public $addTrait;
 
 	/**
 	 * @var string
