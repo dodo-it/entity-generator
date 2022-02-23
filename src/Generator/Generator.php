@@ -2,7 +2,8 @@
 
 namespace DodoIt\EntityGenerator\Generator;
 
-use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 use DodoIt\EntityGenerator\Entity\Column;
 use DodoIt\EntityGenerator\Repository\IRepository;
 use Exception;
@@ -18,16 +19,17 @@ class Generator
 
 	use SmartObject;
 
-	/** @var IRepository */
-	private $repository;
+	private IRepository $repository;
 
-	/** @var Config */
-	private $config;
+	private Config $config;
+
+	private Inflector $inflector;
 
 	public function __construct(IRepository $repository, Config $config)
 	{
 		$this->repository = $repository;
 		$this->config = $config;
+		$this->inflector = InflectorFactory::create()->build();
 	}
 
 
@@ -104,7 +106,7 @@ class Generator
 				continue;
 			}
 
-			$mapping[$column->getField()] = Inflector::classify($column->getField());
+			$mapping[$column->getField()] = $this->inflector->classify($column->getField());
 			$this->generateColumn($entity, $column);
 		}
 
@@ -165,7 +167,7 @@ class Generator
 		}
 
 		if ($this->config->generateGetters) {
-			$getter = $entity->addMethod('get' . Inflector::classify($column->getField()));
+			$getter = $entity->addMethod('get' . $this->inflector->classify($column->getField()));
 			$getter->setVisibility($this->config->getterVisibility)
 				->addBody(str_replace('__FIELD__', $column->getField(), $this->config->getterBody))
 				->setReturnType($type)
@@ -173,7 +175,7 @@ class Generator
 		}
 
 		if ($this->config->generateSetters) {
-			$setter = $entity->addMethod('set' . Inflector::classify($column->getField()));
+			$setter = $entity->addMethod('set' . $this->inflector->classify($column->getField()));
 			$setter->setVisibility($this->config->setterVisibility);
 			$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
 			$setter->addBody(str_replace('__FIELD__', $column->getField(), $this->config->setterBody));
@@ -207,7 +209,7 @@ class Generator
 		}
 
 		if ($this->config->generateColumnConstant) {
-			$columnConstant = $this->config->prefix . Strings::upper(Inflector::tableize($column->getField()));
+			$columnConstant = $this->config->prefix . Strings::upper($this->inflector->tableize($column->getField()));
 
 			if ($columnConstant === 'CLASS') {
 				$columnConstant = '_CLASS';

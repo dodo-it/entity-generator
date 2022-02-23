@@ -151,9 +151,9 @@ class GeneratorTest extends TestCase
 		include $entityFile;
 
 		$entityContents = file_get_contents($entityFile);
-		$this->assertRegExp('/const TABLE\_NAME \= \'constants\'/', $entityContents);
-		$this->assertRegExp('/const PK\_CONSTANT \= \'id\'/', $entityContents);
-		$this->assertRegExp('/const ID \= \'id\'/', $entityContents);
+		$this->assertMatchesRegularExpression('/const TABLE\_NAME \= \'constants\'/', $entityContents);
+		$this->assertMatchesRegularExpression('/const PK\_CONSTANT \= \'id\'/', $entityContents);
+		$this->assertMatchesRegularExpression('/const ID \= \'id\'/', $entityContents);
 		unlink($entityFile);
 	}
 
@@ -230,11 +230,11 @@ class GeneratorTest extends TestCase
 		$this->generator->generateEntity('strictly_typed');
 
 		$entityContents = file_get_contents($entityFile);
-		$this->assertRegExp('/declare\(strict_types/', $entityContents);
-		$this->assertRegExp('/public int \$id;/', $entityContents);
-		$this->assertRegExp('/public \?string \$title;/', $entityContents);
-		$this->assertRegExp('/public bool \$published;/', $entityContents);
-		$this->assertRegExp('/public \?\\\DateTimeInterface \$created\_at;/', $entityContents);
+		$this->assertMatchesRegularExpression('/declare\(strict_types/', $entityContents);
+		$this->assertMatchesRegularExpression('/public int \$id;/', $entityContents);
+		$this->assertMatchesRegularExpression('/public \?string \$title;/', $entityContents);
+		$this->assertMatchesRegularExpression('/public bool \$published;/', $entityContents);
+		$this->assertMatchesRegularExpression('/public \?\\\DateTimeInterface \$created\_at;/', $entityContents);
 		unlink($entityFile);
 	}
 

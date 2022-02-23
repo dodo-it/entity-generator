@@ -3,6 +3,7 @@
 namespace DodoIt\EntityGenerator\Generator;
 
 use Doctrine\Common\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 
 class Helper
 {
@@ -30,7 +31,7 @@ class Helper
 		$result = '';
 
 		foreach ($words as $word) {
-			$result .= $replacements[$word] ?? Inflector::singularize(ucfirst($word));
+			$result .= $replacements[$word] ?? InflectorFactory::create()->build()->singularize(ucfirst($word));
 		}
 
 		return $result;

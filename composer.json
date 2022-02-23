@@ -21,14 +21,14 @@
     }
   },
   "require": {
-    "php": "^7.1|^8.0",
-    "nette/utils": "^2.4|^3.0",
-    "nette/php-generator": "^2.6|^3.0",
-    "doctrine/inflector": "^1.3|^2.0"
+    "php": "^8.0",
+    "nette/utils": "^3.0",
+    "nette/php-generator": "^3.0",
+    "doctrine/inflector": "^2.0"
   },
   "require-dev": {
     "ninjify/qa": ">=0.8",
-    "phpunit/phpunit": ">=7.0"
+    "phpunit/phpunit": ">=9.0"
   },
   "scripts": {
     "qa": [
@@ -61,6 +61,11 @@
   "extra": {
     "branch-alias": {
       "dev-master": "1.2.x-dev"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   }
 }

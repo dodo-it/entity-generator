@@ -10,8 +10,7 @@ use PDO;
 class GeneratorPdoFactory
 {
 
-	/** @var PDO */
-	private $pdo;
+	private PDO $pdo;
 
 	public function __construct(PDO $pdo)
 	{

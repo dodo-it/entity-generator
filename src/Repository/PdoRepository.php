@@ -8,8 +8,7 @@ use PDO;
 class PdoRepository implements IRepository
 {
 
-	/** @var PDO */
-	private $db;
+	private PDO $db;
 
 	public function __construct(PDO $db)
 	{
