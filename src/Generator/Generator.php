@@ -93,7 +93,9 @@ class Generator
 			$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 		}
 
-		$entity->setExtends($this->config->extends);
+		if ($this->config->extends !== NULL) {
+			$entity->setExtends($this->config->extends);
+		}
 
 		$columns = $this->repository->getTableColumns($table);
 		$mapping = [];
