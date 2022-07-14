@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="ruleset">
-    <rule ref="./vendor/ninjify/coding-standard/ruleset.xml">
-        <exclude name="SlevomatCodingStandard.TypeHints.TypeHintDeclaration"/>
+    <rule ref="./vendor/contributte/qa/ruleset.xml">
         <exclude name="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment" />
         <exclude name="SlevomatCodingStandard.Operators.DisallowIncrementAndDecrementOperators" />
     </rule>

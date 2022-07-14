@@ -2,14 +2,13 @@
 
 namespace DodoIt\EntityGenerator\Generator;
 
-use Doctrine\Common\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
 
 class Helper
 {
 
 	/**
-	 * @param mixed[] $array
+	 * @param mixed[][] $array
 	 * @return mixed[]
 	 */
 	public static function multiArrayFlip(array $array): array
@@ -25,6 +24,10 @@ class Helper
 		return $result;
 	}
 
+	/**
+	 * @param array<string, string> $replacements
+	 * @param non-empty-string $separator
+	 */
 	public static function camelize(string $input, array $replacements = [], string $separator = '_'): string
 	{
 		$words = explode($separator, $input);

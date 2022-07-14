@@ -20,9 +20,8 @@ class GeneratorPdoFactory
 	public function create(Config $config): Generator
 	{
 		$repository = new PdoRepository($this->pdo);
-		$generator = new Generator($repository, $config);
 
-		return $generator;
+		return new Generator($repository, $config);
 	}
 
 }

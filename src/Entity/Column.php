@@ -5,53 +5,42 @@ namespace DodoIt\EntityGenerator\Entity;
 class Column extends Entity
 {
 
-	/** @var string */
-	protected $Field;
+	protected string $Field;
 
-	/** @var string */
-	protected $Type;
+	protected string $Type;
 
-	/** @var string */
-	protected $Null;
+	protected string $Null;
 
-	/** @var string */
-	protected $Key;
+	protected ?string $Key;
 
-	/** @var string */
-	protected $Default;
+	protected string|int|null $Default;
 
-	/** @var string */
-	protected $Extra;
+	protected ?string $Extra;
 
 	public function getField(): string
 	{
 		return $this->Field;
 	}
 
-
 	public function getType(): string
 	{
 		return $this->Type;
 	}
-
 
 	public function isNullable(): bool
 	{
 		return $this->Null === 'YES';
 	}
 
-
 	public function getKey(): ?string
 	{
 		return $this->Key;
 	}
 
-
-	public function getDefault(): ?string
+	public function getDefault(): string|int|null
 	{
 		return $this->Default;
 	}
-
 
 	public function getExtra(): ?string
 	{

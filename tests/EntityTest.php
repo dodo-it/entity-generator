@@ -34,7 +34,7 @@ class EntityTest extends TestCase
 		$this->assertInstanceOf(DateTime::class, $entity->getLastLogin());
 		$this->assertEquals('user', $entity->getUsername());
 
-		$modifications = $entity->_getModifications();
+		$modifications = $entity->toArray();
 		$this->assertEquals([
 			'username' => 'user',
 			'active' => 1,
