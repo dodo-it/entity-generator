@@ -9,69 +9,58 @@ use DodoIt\EntityGenerator\Entity\Entity;
 class UserEntity extends Entity
 {
 
-	/** @var int */
-	protected $id;
+	protected int $id;
 
-	/** @var string */
-	protected $username;
+	protected string $username;
 
-	/** @var DateTimeInterface|null */
-	protected $last_login;
+	protected ?DateTimeInterface $last_login = null;
 
-	/** @var bool */
-	protected $active;
+	protected bool $active;
 
 	public function getId(): int
 	{
 		return $this->id;
 	}
 
-
 	public function setId(int $value): self
 	{
-		$this['id'] = $value;
+		$this->id = $value;
 
 		return $this;
 	}
-
 
 	public function getUsername(): string
 	{
 		return $this->username;
 	}
 
-
 	public function setUsername(string $value): self
 	{
-		$this['username'] = $value;
+		$this->username = $value;
 
 		return $this;
 	}
-
 
 	public function getLastLogin(): ?DateTime
 	{
 		return $this->last_login;
 	}
 
-
 	public function setLastLogin(DateTime $value): self
 	{
-		$this['last_login'] = $value;
+		$this->last_login = $value;
 
 		return $this;
 	}
-
 
 	public function isActive(): bool
 	{
 		return $this->active;
 	}
 
-
 	public function setActive(bool $value): self
 	{
-		$this['active'] = $value;
+		$this->active = $value;
 
 		return $this;
 	}

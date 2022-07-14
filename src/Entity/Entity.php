@@ -2,106 +2,49 @@
 
 namespace DodoIt\EntityGenerator\Entity;
 
-use ArrayAccess;
-use ArrayIterator;
-use Countable;
-use Exception;
-use IteratorAggregate;
-
-class Entity implements ArrayAccess, IteratorAggregate, Countable
+class Entity
 {
 
-	public const TABLE = null;
-
-	/** @var mixed[] */
-	protected $data;
-
-	/** @var mixed[] */
-	private $modifications = [];
-
-	public function __construct(array $arr = [])
+	/**
+	 * @param array<string, string|int|bool|float|\DateTimeInterface|null>|\Iterator<string, string|int|bool|float|\DateTimeInterface|null>|null $arr
+	 */
+	public function __construct(array|\Iterator|null $arr = [])
 	{
-		$this->data = $arr;
-
-		foreach ($arr as $k => $v) {
-			$this->$k = $v;
-		}
-	}
-
-
-	public function _getModifications(): array
-	{
-		return $this->modifications;
-	}
-
-
-	public function tableName(): ?string
-	{
-		return self::TABLE;
+		$this->loadFromArray($arr);
 	}
 
 	/**
-	 * @return int
+	 * @return array<string, string|int|bool|float|\DateTimeInterface|null>
 	 */
-	public function count()
-	{
-		return count($this->data);
-	}
-
-
 	public function toArray(): array
 	{
-		return $this->data;
+		$ref = new \ReflectionClass($this);
+
+		$result = [];
+
+		foreach ($ref->getProperties() as $property) {
+			if (isset($this->{$property->getName()})) {
+				$result[$property->getName()] = $this->{$property->getName()};
+			}
+		}
+
+		return $result;
 	}
 
 	/**
-	 * @return ArrayIterator
+	 * @param array<string, string|int|bool|float|\DateTimeInterface|null>|\Iterator<string, string|int|bool|float|\DateTimeInterface|null>|null $arr
 	 */
-	public function getIterator()
+	public function loadFromArray(array|\Iterator|null $arr): void
 	{
-		return new ArrayIterator($this->data);
-	}
+		if ($arr === null) {
+			return;
+		}
 
-	/**
-	 * @param string $nm
-	 * @param mixed $val
-	 * @return void
-	 */
-	public function offsetSet($nm, $val)
-	{
-		$this->data[$nm] = $val;
-		$this->modifications[$nm] = $val;
-		$this->$nm = $val;
-	}
-
-
-	/**
-	 * @param string $nm
-	 * @return void
-	 */
-	public function offsetGet($nm)
-	{
-		throw new Exception('You should never access entity as array');
-	}
-
-
-	/**
-	 * @param string $nm
-	 * @return void
-	 */
-	public function offsetExists($nm)
-	{
-		throw new Exception('You should never access entity as array');
-	}
-
-
-	/**
-	 * @param string $nm
-	 * @return void
-	 */
-	public function offsetUnset($nm)
-	{
-		throw new Exception('You should never access entity as array');
+		foreach ($arr as $k => $v) {
+			if (property_exists($this, $k)) {
+				$this->$k = $v;
+			}
+		}
 	}
 
 }

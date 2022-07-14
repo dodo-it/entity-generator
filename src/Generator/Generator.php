@@ -7,7 +7,6 @@ use Doctrine\Inflector\InflectorFactory;
 use DodoIt\EntityGenerator\Entity\Column;
 use DodoIt\EntityGenerator\Repository\IRepository;
 use Exception;
-use Nette\NotSupportedException;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\SmartObject;
@@ -31,7 +30,6 @@ class Generator
 		$this->config = $config;
 		$this->inflector = InflectorFactory::create()->build();
 	}
-
 
 	public function generate(?string $table = null, ?string $query = null): void
 	{
@@ -60,16 +58,12 @@ class Generator
 		}
 	}
 
-
 	public function generateEntity(string $table): void
 	{
 		$file = new PhpFile();
+
 		if ($this->config->addDeclareStrictTypes) {
-			if (!method_exists($file, 'setStrictTypes')) {
-				throw new NotSupportedException('You have set addDeclareStrictTypes but have phpgenerator dependency <3.2.0!');
-			} else {
-				$file->setStrictTypes($this->config->addDeclareStrictTypes);
-			}
+			$file->setStrictTypes($this->config->addDeclareStrictTypes);
 		}
 
 		$namespace = $file->addNamespace($this->config->namespace);
@@ -93,7 +87,7 @@ class Generator
 			$entity->addConstant($this->config->tableConstant, $table)->setVisibility('public');
 		}
 
-		if ($this->config->extends !== NULL) {
+		if ($this->config->extends !== null) {
 			$entity->setExtends($this->config->extends);
 		}
 
@@ -124,7 +118,6 @@ class Generator
 		file_put_contents($this->config->path . '/' . $shortClassName . '.php', $file->__toString());
 	}
 
-
 	protected function getClassName(string $table): string
 	{
 		return $this->config->prefix . Helper::camelize($table, $this->config->replacements) . $this->config->suffix;
@@ -141,7 +134,6 @@ class Generator
 		}
 	}
 
-
 	protected function generateColumn(ClassType $entity, Column $column): void
 	{
 		$type = $this->getColumnType($column);
@@ -155,12 +147,8 @@ class Generator
 			}
 
 			if ($this->config->strictlyTypedProperties) {
-				if (!method_exists($property, 'setType')) {
-					throw new NotSupportedException('You have set strictlyTypedProperties but have phpgenerator dependency <3.3.0!');
-				} else {
 					$property->setType($type);
 					$property->setNullable($column->isNullable());
-				}
 			}
 		}
 
@@ -185,15 +173,15 @@ class Generator
 		}
 	}
 
-
 	protected function getColumnType(Column $column): string
 	{
 		$dbColumnType = $column->getType();
 
 		if (Strings::contains($dbColumnType, '(')) {
-			$dbColumnType = Strings::lower(Strings::before($dbColumnType, '('));
+			$dbColumnType = Strings::lower(Strings::before($dbColumnType, '(') ?? 'string');
 		}
 
+		/** @var array<string, string> $typeMapping */
 		$typeMapping = Helper::multiArrayFlip($this->config->typeMapping);
 
 		if (isset($typeMapping[$dbColumnType])) {
@@ -238,14 +226,22 @@ class Generator
 		}
 	}
 
-
 	private function getMethodBody(string $class, string $name): string
 	{
 		$func = new ReflectionMethod($class, $name);
-		$startLine = $func->getStartLine() + 1;
-		$length = $func->getEndLine() - $startLine - 1;
+		$startLine = $func->getStartLine() + 1; //@phpstan-ignore-line
+		$length = $func->getEndLine() - $startLine - 1; //@phpstan-ignore-line
+
+		if ($func->getFileName() === false) {
+			throw new Exception('Cannot get generated entity filename!');
+		}
 
 		$source = file($func->getFileName());
+
+		if ($source === false) {
+			throw new Exception('Cannot open generated entity file!');
+		}
+
 		$bodyLines = array_slice($source, $startLine, $length);
 		$body = '';
 

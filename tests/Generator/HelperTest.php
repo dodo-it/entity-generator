@@ -22,13 +22,13 @@ class HelperTest extends TestCase
 		]);
 	}
 
-	public function testCamelize()
+	public function testCamelize(): void
 	{
 		$this->assertEquals('User', Helper::camelize('users'));
 		$this->assertEquals('UserLogin', Helper::camelize('users_logins'));
 	}
 
-	public function testGetPhpDocProperties()
+	public function testGetPhpDocProperties(): void
 	{
 		$comment = '/**
 		 * @property int $id
