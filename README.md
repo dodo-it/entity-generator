@@ -5,8 +5,8 @@ Highly customizable (typed) entity generator from database. It can generate enti
 
 -----
 [![Latest Stable Version](https://poser.pugx.org/dodo-it/entity-generator/v/stable)](https://packagist.org/packages/dodo-it/entity-generator)
-[![Build Status](https://travis-ci.org/dodo-it/entity-generator.svg?branch=master)](https://travis-ci.org/dodo-it/entity-generator)
-[![codecov](https://codecov.io/gh/dodo-it/entity-generator/branch/master/graph/badge.svg)](https://codecov.io/gh/dodo-it/entity-generator)
+[![build](https://github.com/dodo-it/entity-generator/workflows/build/badge.svg)](https://github.com/dodo-it/entity-generator/actions?query=workflow%3Abuild)
+[![Coverage Status](https://coveralls.io/repos/github/dodo-it/entity-generator/badge.svg?branch=master)](https://coveralls.io/github/dodo-it/entity-generator?branch=master)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
 [![Total Downloads](https://poser.pugx.org/dodo-it/entity-generator/downloads)](https://packagist.org/packages/dodo-it/entity-generator)
 [![License](https://poser.pugx.org/dodo-it/entity-generator/license)](https://packagist.org/packages/dodo-it/entity-generator)
