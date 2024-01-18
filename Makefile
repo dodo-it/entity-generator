@@ -18,7 +18,7 @@ phpstan: vendor
 	vendor/bin/phpstan analyse -l max -c phpstan.neon src
 
 tests: vendor
-	vendor/bin/phpunit
+	vendor/bin/phpunit tests
 
 coverage: vendor
-	vendor/bin/phpunit --coverage-clover=coverage.xml
+	vendor/bin/phpunit tests --coverage-clover=coverage.xml

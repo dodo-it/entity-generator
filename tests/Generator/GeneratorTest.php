@@ -126,8 +126,7 @@ class GeneratorTest extends TestCase
 		$this->config->path = __DIR__ . '/../TestEntities';
 
 		$this->repository->expects($this->once())->method('getTables')->willReturn(['table1', 'table2']);
-		$this->repository->expects($this->exactly(2))->method('getTableColumns')
-			->withConsecutive(['table1'], ['table2'])->willReturn($this->tableColumns);
+		$this->repository->expects($this->exactly(2))->method('getTableColumns')->willReturn($this->tableColumns);
 		$this->generator->generate();
 
 		$entityFile = $this->config->path . '/Table1Entity.php';

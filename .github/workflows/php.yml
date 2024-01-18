@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ["8.0"]
+        php-version: ["8.3"]
         operating-system: ["ubuntu-latest"]
       fail-fast: false
 
@@ -80,11 +80,11 @@ jobs:
     runs-on: "${{ matrix.operating-system }}"
     strategy:
       matrix:
-        php-version: ["8.1"]
+        php-version: ["8.3"]
         operating-system: ["ubuntu-latest"]
         composer-args: [ "" ]
         include:
-          - php-version: "8.0"
+          - php-version: "8.1"
             operating-system: "ubuntu-latest"
             composer-args: "--ignore-platform-reqs"
       fail-fast: false
@@ -136,7 +136,7 @@ jobs:
         run: 'echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"'
 
       - name: "Tests"
-        run: "vendor/bin/phpunit"
+        run: "vendor/bin/phpunit tests"
 
   static-analysis:
     name: "Static analysis"
@@ -144,7 +144,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ["8.1"]
+        php-version: ["8.3"]
         operating-system: ["ubuntu-latest"]
       fail-fast: false
 
@@ -200,7 +200,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ["8.1"]
+        php-version: ["8.3"]
         operating-system: ["ubuntu-latest"]
       fail-fast: false
 
