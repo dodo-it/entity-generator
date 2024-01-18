@@ -8,13 +8,11 @@
     <rule ref="Generic.WhiteSpace.ScopeIndent">
     <properties>
         <property name="indent" value="4"/>
-        <property name="tabIndent" value="true"/>
     </properties>
 </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
         <properties>
             <property name="allowFullyQualifiedGlobalClasses" value="true"/>
-            <property name="tabIndent" value="true"/>
         </properties>
     </rule>
     <rule ref="Generic.WhiteSpace.DisallowSpaceIndent"/>

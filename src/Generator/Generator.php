@@ -79,7 +79,7 @@ class Generator
 		$phpDocProperties = [];
 
 		if (!$this->config->rewrite && class_exists($fqnClassName)) {
-			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName));
+			$this->cloneEntityFromExistingEntity($entity, ClassType::from($fqnClassName)); //@phpstan-ignore-line
 			$phpDocProperties = Helper::getPhpDocComments($entity->getComment() ?? '');
 		}
 
@@ -98,7 +98,7 @@ class Generator
 			$this->validateColumnName($table, $column);
 			$this->generateColumnConstant($entity, $column);
 
-			if (isset($entity->properties[$column->getField()]) || in_array($column->getField(), $phpDocProperties, true)) {
+			if ($entity->hasProperty($column->getField()) || in_array($column->getField(), $phpDocProperties, true)) {
 				continue;
 			}
 
@@ -107,7 +107,7 @@ class Generator
 		}
 
 		if ($this->config->generateMapping) {
-			if (isset($entity->properties['mapping'])) {
+			if ($entity->hasProperty('mapping')) {
 				$mapping += $entity->getProperty('mapping')->getValue();
 			}
 
@@ -167,7 +167,7 @@ class Generator
 		if ($this->config->generateSetters) {
 			$setter = $entity->addMethod('set' . $this->inflector->classify($column->getField()));
 			$setter->setVisibility($this->config->setterVisibility);
-			$setter->addParameter('value')->setTypeHint($type)->setNullable($column->isNullable());
+			$setter->addParameter('value')->setType($type)->setNullable($column->isNullable());
 			$setter->addBody(str_replace('__FIELD__', $column->getField(), $this->config->setterBody));
 			$setter->setReturnType('self');
 		}
@@ -218,8 +218,9 @@ class Generator
 		$entity->setProperties($from->getProperties());
 		$entity->setComment($from->getComment());
 		$entity->setMethods($from->getMethods());
+		$methods = $entity->getMethods();
 
-		foreach ($entity->methods as $method) {
+		foreach ($methods as $method) {
 			$fqnClassName = '\\' . $this->config->namespace . '\\' . $entity->getName();
 			$body = $this->getMethodBody($fqnClassName, $method->getName());
 			$method->setBody($body);
