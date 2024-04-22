@@ -1,0 +1,40 @@
+networks:
+  default:
+    name: default_network
+
+services:
+  db:
+    image: mariadb # for rpi3/4: ghcr.io/linuxserver/mariadb
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-admin-secret
+      - TZ=${TZ:-Europe/Paris}
+      - MYSQL_DATABASE=my-database
+      - MYSQL_USER=my-username
+      - MYSQL_PASSWORD=my-password
+    volumes:
+      # directory for init sql and scripts
+      - ../examples:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      # the start_period is long enough to ensure that init data is fully loaded
+      start_period: 30s
+    command: --skip-innodb-use-native-aio
+
+
+  php:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - TZ=${TZ:-Europe/Paris}
+      - MYSQL_HOSTNAME=db
+      - MYSQL_DATABASE=my-database
+      - MYSQL_USERNAME=my-username
+      - MYSQL_PASSWORD=my-password
+    volumes:
+      - ./entities:/app/entities
