@@ -3,3 +3,6 @@
 /temp
 /composer.lock
 .phpunit.result.cache
+/node_modules
+/docker/entities
+/docker/vendor
